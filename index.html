@@ -18,8 +18,17 @@
         .font-orbitron {
             font-family: 'Orbitron', sans-serif;
         }
-        .vice-gradient {
-            background: linear-gradient(135deg, #ff007f 0%, #7928ca 50%, #00dfd8 100%);
+        .vice-gradient-anim {
+            background: linear-gradient(270deg, #ff007f, #7928ca, #00dfd8, #ff007f);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientMove 10s ease infinite;
+        }
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
         .neon-pink {
             text-shadow: 0 0 15px rgba(255, 0, 127, 0.8), 0 0 30px rgba(255, 0, 127, 0.4);
@@ -28,95 +37,113 @@
             text-shadow: 0 0 15px rgba(0, 223, 216, 0.8), 0 0 30px rgba(0, 223, 216, 0.4);
         }
         .glass-panel {
-            background: linear-gradient(135deg, rgba(18, 13, 33, 0.85) 0%, rgba(8, 6, 16, 0.95) 100%);
+            background: linear-gradient(135deg, rgba(18, 13, 33, 0.9) 0%, rgba(8, 6, 16, 0.95) 100%);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 0, 127, 0.25);
+            border: 1px solid rgba(255, 0, 127, 0.3);
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8);
         }
-        .ambient-glow {
+        .ambient-glow-1 {
             position: absolute;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(255, 0, 127, 0.15) 0%, rgba(0, 223, 216, 0.05) 50%, transparent 80%);
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255, 0, 127, 0.2) 0%, transparent 70%);
+            top: 10%;
+            left: 10%;
             z-index: 0;
             pointer-events: none;
+            animation: pulseGlow 6s ease-in-out infinite alternate;
+        }
+        .ambient-glow-2 {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(0, 223, 216, 0.15) 0%, transparent 70%);
+            bottom: 10%;
+            right: 10%;
+            z-index: 0;
+            pointer-events: none;
+            animation: pulseGlow 6s ease-in-out infinite alternate-reverse;
+        }
+        @keyframes pulseGlow {
+            0% { transform: scale(1); opacity: 0.6; }
+            100% { transform: scale(1.2); opacity: 1; }
         }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between relative selection:bg-pink-500 selection:text-white">
 
-    <!-- Luces ambientales de fondo -->
-    <div class="ambient-glow top-0 left-1/4 -translate-x-1/2"></div>
-    <div class="ambient-glow bottom-1/3 right-1/4 translate-x-1/2"></div>
+    <!-- Luces ambientales animadas -->
+    <div class="ambient-glow-1"></div>
+    <div class="ambient-glow-2"></div>
 
     <!-- CABECERA -->
-    <header class="w-full text-center py-10 px-4 border-b border-pink-600/20 bg-black/70 backdrop-blur-md relative z-10">
+    <header class="w-full text-center py-10 px-4 border-b border-pink-600/20 bg-black/80 backdrop-blur-md relative z-10 shadow-2xl">
         <div class="inline-block mb-3 px-4 py-1.5 rounded-full bg-pink-500/10 border border-pink-500/30 text-pink-400 text-xs font-orbitron tracking-widest uppercase shadow-lg">
             🌴 Operación Leonida • Edición España
         </div>
-        <h1 class="text-3xl md:text-6xl font-black font-orbitron tracking-wider neon-pink text-pink-500">
-            GTA VI <span class="text-transparent bg-clip-text vice-gradient">NEW ZEALAND TRICK</span>
+        <h1 class="text-3xl md:text-6xl font-black font-orbitron tracking-wider neon-pink">
+            GTA VI <span class="vice-gradient-anim">NEW ZEALAND TRICK</span>
         </h1>
     </header>
 
     <!-- CONTENIDO PRINCIPAL -->
     <main class="max-w-6xl mx-auto px-4 py-10 w-full flex-grow flex flex-col items-center relative z-10">
         
-        <!-- GUÍA DETALLADA DEL TRUCO -->
+        <!-- GUÍA DETALLADA DEL TRUCO (ARRIBA) -->
         <section class="glass-panel rounded-2xl p-6 md:p-8 mb-10 w-full border-l-4 border-l-cyan-400">
             <h2 class="text-xl md:text-2xl font-bold font-orbitron text-cyan-400 mb-4 neon-cyan flex items-center gap-2">
-                📖 Guía Definitiva: ¿Cómo funciona el truco?
+                📖 Guía Definitiva: ¿Cómo funciona el truco de Nueva Zelanda?
             </h2>
             <div class="space-y-4 text-gray-300 text-sm md:text-base leading-relaxed">
                 <p>
-                    El lanzamiento oficial de <strong>Grand Theft Auto VI</strong> está fijado para el <strong class="text-white">19 de noviembre de 2026</strong>. No obstante, las editoras activan los juegos a medianoche según la hora local de cada país.
+                    El lanzamiento oficial de <strong>Grand Theft Auto VI</strong> está programado para el <strong class="text-white">19 de noviembre de 2026</strong>. No obstante, las editoras activan los videojuegos basándose en la medianoche local de cada territorio.
                 </p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
                     <div class="bg-black/50 border border-pink-500/30 rounded-xl p-4">
                         <span class="block text-pink-400 font-orbitron font-bold text-xs uppercase mb-1">⏰ La Ventaja Horaria</span>
-                        <p class="text-xs text-gray-300">Nueva Zelanda se encuentra varias horas por delante de España. Su medianoche se corresponde exactamente con las <strong class="text-white">12:00 del mediodía en la España peninsular del 18 de noviembre de 2026</strong>.</p>
+                        <p class="text-xs text-gray-300">Nueva Zelanda se sitúa varias horas por delante de España. Su medianoche de estreno se corresponde exactamente con las <strong class="text-white">12:00 del mediodía en la España peninsular del 18 de noviembre de 2026</strong>.</p>
                     </div>
                     <div class="bg-black/50 border border-cyan-400/30 rounded-xl p-4">
                         <span class="block text-cyan-400 font-orbitron font-bold text-xs uppercase mb-1">🎮 Cómo aplicarlo</span>
-                        <p class="text-xs text-gray-300">En plataformas como Xbox, modificando la región del sistema a Nueva Zelanda, podrás arrancar el juego 12 horas antes de que se produzca el lanzamiento oficial en territorio español.</p>
+                        <p class="text-xs text-gray-300">En plataformas compatibles (como Xbox), configurando la región del sistema a Nueva Zelanda, el sistema te permitirá arrancar el juego 12 horas antes de que se produzca el lanzamiento oficial en España.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- SECCIÓN DE CUENTA ATRÁS -->
+        <!-- SECCIÓN DE CUENTA ATRÁS ANIMADA -->
         <div class="w-full text-center mb-12">
             <h3 class="text-pink-400 font-orbitron text-base md:text-xl font-bold uppercase tracking-widest mb-6 neon-pink">
                 ⏱️ Tiempo restante para volar a Nueva Zelanda
             </h3>
             
             <div id="countdown" class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 w-full">
-                <div class="glass-panel rounded-2xl p-6 text-center border-b-4 border-b-cyan-400 transform hover:scale-[1.02] transition-transform duration-300">
+                <div class="glass-panel rounded-2xl p-6 text-center border-b-4 border-b-cyan-400 transform hover:scale-105 transition-transform duration-300 shadow-xl">
                     <span id="days" class="text-5xl md:text-7xl font-black font-orbitron text-cyan-400 neon-cyan">00</span>
                     <span class="block text-xs md:text-sm text-gray-400 uppercase tracking-widest mt-3 font-bold">Días</span>
                 </div>
-                <div class="glass-panel rounded-2xl p-6 text-center border-b-4 border-b-pink-500 transform hover:scale-[1.02] transition-transform duration-300">
+                <div class="glass-panel rounded-2xl p-6 text-center border-b-4 border-b-pink-500 transform hover:scale-105 transition-transform duration-300 shadow-xl">
                     <span id="hours" class="text-5xl md:text-7xl font-black font-orbitron text-pink-500 neon-pink">00</span>
                     <span class="block text-xs md:text-sm text-gray-400 uppercase tracking-widest mt-3 font-bold">Horas</span>
                 </div>
-                <div class="glass-panel rounded-2xl p-6 text-center border-b-4 border-b-cyan-400 transform hover:scale-[1.02] transition-transform duration-300">
+                <div class="glass-panel rounded-2xl p-6 text-center border-b-4 border-b-cyan-400 transform hover:scale-105 transition-transform duration-300 shadow-xl">
                     <span id="minutes" class="text-5xl md:text-7xl font-black font-orbitron text-cyan-400 neon-cyan">00</span>
                     <span class="block text-xs md:text-sm text-gray-400 uppercase tracking-widest mt-3 font-bold">Minutos</span>
                 </div>
-                <div class="glass-panel rounded-2xl p-6 text-center border-b-4 border-b-pink-500 transform hover:scale-[1.02] transition-transform duration-300">
+                <div class="glass-panel rounded-2xl p-6 text-center border-b-4 border-b-pink-500 transform hover:scale-105 transition-transform duration-300 shadow-xl">
                     <span id="seconds" class="text-5xl md:text-7xl font-black font-orbitron text-pink-500 neon-pink">00</span>
                     <span class="block text-xs md:text-sm text-gray-400 uppercase tracking-widest mt-3 font-bold">Segundos</span>
                 </div>
             </div>
 
             <!-- Mensaje final -->
-            <div id="message" class="hidden glass-panel rounded-2xl p-8 border-2 border-cyan-400 w-full animate-pulse mt-6">
+            <div id="message" class="hidden glass-panel rounded-2xl p-8 border-2 border-cyan-400 w-full animate-pulse mt-6 shadow-2xl">
                 <h2 class="text-3xl md:text-5xl font-black font-orbitron text-cyan-400 neon-cyan mb-2">¡HORA DE VIAJAR A NUEVA ZELANDA! ✈️🌴</h2>
                 <p class="text-white text-base">Enciende tu consola, cambia la región y adéntrate en Vice City.</p>
             </div>
         </div>
 
-        <!-- SECCIÓN DE TRÁILERS Y LOOK EXTENDED -->
+        <!-- SECCIÓN DE TRÁILERS Y MATERIAL OFICIAL (4 VÍDEOS VERIFICADOS) -->
         <section class="w-full glass-panel rounded-2xl p-6 md:p-8 mb-8">
             <h3 class="text-cyan-400 font-orbitron text-center text-xl md:text-2xl font-bold mb-6 neon-cyan">
                 🎬 TRÁILERS Y MATERIAL OFICIAL
@@ -124,7 +151,7 @@
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 
-                <!-- Tráiler 1 (ID: Qh20jWOIvZM) -->
+                <!-- Tráiler 1 (ID oficial: Qh20jWOIvZM) -->
                 <div class="flex flex-col bg-black/40 border border-pink-500/30 rounded-xl overflow-hidden shadow-xl">
                     <div class="p-3 bg-black/60 border-b border-pink-500/20 flex items-center justify-between">
                         <span class="text-pink-400 font-orbitron text-xs font-bold uppercase">Tráiler Oficial 1</span>
@@ -140,14 +167,14 @@
                     </div>
                 </div>
 
-                <!-- Tráiler 2 (ID: FKUW7_I4QwA) -->
+                <!-- Tráiler 2 (ID oficial: HKn1W_nlfm0) -->
                 <div class="flex flex-col bg-black/40 border border-cyan-400/30 rounded-xl overflow-hidden shadow-xl">
                     <div class="p-3 bg-black/60 border-b border-cyan-400/20 flex items-center justify-between">
                         <span class="text-cyan-400 font-orbitron text-xs font-bold uppercase">Tráiler Oficial 2</span>
                         <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
                     </div>
-                    <div class="relative w-full cursor-pointer group" style="padding-top: 56.25%;" onclick="loadVideo(this, 'FKUW7_I4QwA')">
-                        <img src="https://img.youtube.com/vi/FKUW7_I4QwA/hqdefault.jpg" alt="GTA VI Trailer 2" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                    <div class="relative w-full cursor-pointer group" style="padding-top: 56.25%;" onclick="loadVideo(this, 'HKn1W_nlfm0')">
+                        <img src="https://img.youtube.com/vi/HKn1W_nlfm0/hqdefault.jpg" alt="GTA VI Trailer 2" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                         <div class="absolute inset-0 bg-black/40 flex items-center justify-center group-hover:bg-black/20 transition-colors">
                             <div class="w-12 h-12 rounded-full bg-cyan-500/90 text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                                 <svg class="w-6 h-6 fill-current translate-x-0.5" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
@@ -156,7 +183,7 @@
                     </div>
                 </div>
 
-                <!-- Tráiler 3 (ID: vMt3e6sAgn0) -->
+                <!-- Tráiler 3 (ID oficial: vMt3e6sAgn0) -->
                 <div class="flex flex-col bg-black/40 border border-pink-500/30 rounded-xl overflow-hidden shadow-xl">
                     <div class="p-3 bg-black/60 border-b border-pink-500/20 flex items-center justify-between">
                         <span class="text-pink-400 font-orbitron text-xs font-bold uppercase">Tráiler Oficial 3</span>
@@ -172,7 +199,7 @@
                     </div>
                 </div>
 
-                <!-- Look Extended (ID: DbElJ2Fkmf8) -->
+                <!-- Look Extended (ID oficial: DbElJ2Fkmf8) -->
                 <div class="flex flex-col bg-black/40 border border-cyan-400/30 rounded-xl overflow-hidden shadow-xl">
                     <div class="p-3 bg-black/60 border-b border-cyan-400/20 flex items-center justify-between">
                         <span class="text-cyan-400 font-orbitron text-xs font-bold uppercase">Look Extended</span>
@@ -194,7 +221,7 @@
     </main>
 
     <!-- PIE DE PÁGINA (LETRAS ABAJO DEL TODO) -->
-    <footer class="w-full text-center py-8 px-4 border-t border-pink-900/40 bg-black/95 relative z-10">
+    <footer class="w-full text-center py-8 px-4 border-t border-pink-900/40 bg-black/95 relative z-10 shadow-2xl">
         <div class="max-w-4xl mx-auto space-y-2">
             <p class="font-orbitron tracking-wider text-pink-500 font-bold text-sm">GRAND THEFT AUTO VI • NUEVA ZELANDA EDITION</p>
             <p class="text-xs text-gray-400">Página web diseñada exclusivamente para el seguimiento del lanzamiento y el truco de cambio de región horaria.</p>
