@@ -173,10 +173,6 @@
         #runnerCanvas { background: linear-gradient(to bottom, #130a2a, #ff6633); height: 250px; cursor: pointer; }
         #shooterCanvas { background: #1a1a24; height: 350px; cursor: crosshair; }
         #highwayCanvas { background: #111; height: 350px; cursor: pointer; }
-        #airboatCanvas { background: #002233; height: 350px; cursor: pointer; }
-        #viralCanvas { background: #000; height: 400px; max-width: 350px; cursor: crosshair; border-radius: 30px; border: 10px solid #222; }
-        #skaterCanvas { background: linear-gradient(to bottom, #00f3ff, #ff3366); height: 250px; cursor: pointer; }
-        #safeCanvas { background: radial-gradient(circle, #222, #000); height: 350px; cursor: pointer; }
 
         .game-instructions {
             font-size: 0.8rem;
@@ -234,7 +230,7 @@
             </div>
         </div>
 
-        <!-- 1: Vice City Getaway -->
+        <!-- JUEGO 1: Vice City Getaway (Runner Realista Lateral) -->
         <div class="game-section">
             <div class="game-header">
                 <div class="game-title">Vice City Getaway</div>
@@ -244,7 +240,7 @@
             <div class="game-instructions">Toca la pantalla o ESPACIO para saltar las barricadas policiales</div>
         </div>
 
-        <!-- 2: GTA Retro Shootout -->
+        <!-- JUEGO 2: GTA Retro Shootout (Top-Down Clásico Realista) -->
         <div class="game-section">
             <div class="game-header">
                 <div class="game-title">GTA Retro Shootout</div>
@@ -254,7 +250,7 @@
             <div class="game-instructions">WASD para moverte | CLIC o Toca para Disparar a la policía</div>
         </div>
         
-        <!-- 3: Vice City Highway -->
+        <!-- JUEGO 3: Vice City Highway (Top-Down Esquivar Tráfico) -->
         <div class="game-section">
             <div class="game-header">
                 <div class="game-title">Vice City Highway</div>
@@ -262,46 +258,6 @@
             </div>
             <canvas id="highwayCanvas" width="800" height="350"></canvas>
             <div class="game-instructions">A y D o Flechas IZQ/DER para esquivar | Toca los lados de la pantalla</div>
-        </div>
-
-        <!-- 4: Everglades Airboat -->
-        <div class="game-section">
-            <div class="game-header">
-                <div class="game-title">Everglades Escape</div>
-                <div class="game-score">METROS: <span id="abScore">0</span> | MÁX: <span id="abHighScore">0</span></div>
-            </div>
-            <canvas id="airboatCanvas" width="800" height="350"></canvas>
-            <div class="game-instructions">Esquiva troncos y caimanes en el pantano (A/D o Toca los lados)</div>
-        </div>
-
-        <!-- 5: Leonida Viral Catch -->
-        <div class="game-section">
-            <div class="game-header">
-                <div class="game-title">Leonida Viral Catch</div>
-                <div class="game-score">LIKES: <span id="vScore">0</span> | MÁX: <span id="vHighScore">0</span></div>
-            </div>
-            <canvas id="viralCanvas" width="350" height="400"></canvas>
-            <div class="game-instructions">Graba (Toca) los sucesos virales de Leonida antes de que desaparezcan</div>
-        </div>
-
-        <!-- 6: Ocean Beach Skater -->
-        <div class="game-section">
-            <div class="game-header">
-                <div class="game-title">Ocean Beach Skater</div>
-                <div class="game-score">PUNTOS: <span id="skScore">0</span> | MÁX: <span id="skHighScore">0</span></div>
-            </div>
-            <canvas id="skaterCanvas" width="800" height="250"></canvas>
-            <div class="game-instructions">Patina por Ocean Beach. Toca la pantalla o Espacio para saltar chihuahuas y gaviotas</div>
-        </div>
-
-        <!-- 7: Vice City Safe Cracker -->
-        <div class="game-section">
-            <div class="game-header">
-                <div class="game-title">Vice City Safe Cracker</div>
-                <div class="game-score">NIVEL: <span id="scScore">0</span> | MÁX: <span id="scHighScore">0</span></div>
-            </div>
-            <canvas id="safeCanvas" width="800" height="350"></canvas>
-            <div class="game-instructions">Toca la pantalla cuando la aguja pase por la zona azul para abrir la caja fuerte</div>
         </div>
 
         <!-- Vídeos -->
@@ -331,7 +287,7 @@
     </footer>
 
     <script>
-        // --- 1. CUENTA ATRÁS ---
+        // --- 1. LÓGICA DE LA CUENTA ATRÁS ---
         const targetDate = new Date("November 18, 2026 12:00:00 UTC").getTime();
         const timerInterval = setInterval(updateCountdown, 1000);
 
@@ -354,12 +310,19 @@
         }
         updateCountdown();
 
-        // --- 2. JUEGO 1: RUNNER ---
+        // ==========================================================
+        // --- 2. MINIJUEGO 1: RUNNER LATERAL ---
+        // ==========================================================
         const rCanvas = document.getElementById("runnerCanvas");
         const rCtx = rCanvas.getContext("2d");
-        let rIsPlaying = false, rIsGameOver = false, rScore = 0, rTick = 0, rBgOffset = 0, rRoadOffset = 0, rGameSpeed = 7.5;
-        let rHighScore = localStorage.getItem('gtaRunnerHighScore') || 0; document.getElementById('rHighScore').innerText = rHighScore;
-        let rPlayer = { x: 60, y: 190, width: 85, height: 25, dy: 0, jumpForce: -12.5, grounded: false };
+        
+        let rIsPlaying = false, rIsGameOver = false;
+        let rScore = 0, rTick = 0, rBgOffset = 0, rRoadOffset = 0;
+        let rHighScore = localStorage.getItem('gtaRunnerHighScore') || 0;
+        document.getElementById('rHighScore').innerText = rHighScore;
+
+        let rGameSpeed = 7.5;
+        const rPlayer = { x: 60, y: 190, width: 85, height: 25, dy: 0, jumpForce: -12.5, grounded: false };
         let rObstacles = [];
         const rBuildings = Array.from({length: 30}, (_, i) => ({ w: Math.random()*40+30, h: Math.random()*100+40, x: i*60 }));
 
@@ -370,33 +333,54 @@
             rObstacles.push({ x: rCanvas.width, y: 185, width: 35, height: 30 });
             requestAnimationFrame(updateRunner);
         }
-        function rJump() { if (!rIsPlaying || rIsGameOver) { initRunner(); return; } if (rPlayer.grounded) { rPlayer.dy = rPlayer.jumpForce; rPlayer.grounded = false; } }
+
+        function rJump() {
+            if (!rIsPlaying || rIsGameOver) { initRunner(); return; }
+            if (rPlayer.grounded) { rPlayer.dy = rPlayer.jumpForce; rPlayer.grounded = false; }
+        }
+
         function updateRunner() {
             if (rIsGameOver) return;
             rTick++; rCtx.clearRect(0, 0, rCanvas.width, rCanvas.height);
-            rCtx.fillStyle = 'rgba(255, 200, 0, 0.15)'; rCtx.beginPath(); rCtx.arc(rCanvas.width/2, 140, 90, 0, Math.PI*2); rCtx.fill();
+
+            // Fondo Parallax
+            rCtx.fillStyle = 'rgba(255, 200, 0, 0.15)';
+            rCtx.beginPath(); rCtx.arc(rCanvas.width/2, 140, 90, 0, Math.PI*2); rCtx.fill();
             rBgOffset -= rGameSpeed * 0.15; if (rBgOffset <= -1000) rBgOffset = 0;
+            
             rCtx.fillStyle = '#0a0318';
             for(let i=0; i<rBuildings.length*2; i++) {
                 let b = rBuildings[i % rBuildings.length], bx = (i*60) + rBgOffset;
-                if (bx > -100 && bx < rCanvas.width) { rCtx.fillRect(bx, 210-b.h, b.w, b.h); }
+                if (bx > -100 && bx < rCanvas.width) {
+                    rCtx.fillRect(bx, 210-b.h, b.w, b.h);
+                    rCtx.fillStyle = 'rgba(255, 255, 200, 0.4)';
+                    if (i%3===0) rCtx.fillRect(bx+5, 210-b.h+10, 4, 4);
+                    rCtx.fillStyle = '#0a0318';
+                }
             }
+
+            // Carretera
             rCtx.fillStyle = '#1a1a24'; rCtx.fillRect(0, 210, rCanvas.width, 40);
             rCtx.strokeStyle = '#ff3366'; rCtx.lineWidth = 2; rCtx.beginPath(); rCtx.moveTo(0, 210); rCtx.lineTo(rCanvas.width, 210); rCtx.stroke();
             rRoadOffset -= rGameSpeed; if (rRoadOffset <= -60) rRoadOffset = 0;
             rCtx.fillStyle = 'rgba(255, 255, 255, 0.4)';
             for(let i=0; i<rCanvas.width+60; i+=60) rCtx.fillRect(i+rRoadOffset, 230, 30, 3);
+
+            // Físicas
             rPlayer.dy += 0.65; rPlayer.y += rPlayer.dy;
             if (rPlayer.y + rPlayer.height >= 210) { rPlayer.y = 210 - rPlayer.height; rPlayer.dy = 0; rPlayer.grounded = true; }
 
+            // Dibujar Coche
             rCtx.save(); rCtx.translate(rPlayer.x, rPlayer.y);
             if (!rPlayer.grounded) rCtx.rotate(-0.15);
             rCtx.fillStyle = '#111'; rCtx.beginPath(); rCtx.arc(15, 22, 10, 0, Math.PI*2); rCtx.fill(); rCtx.beginPath(); rCtx.arc(70, 22, 10, 0, Math.PI*2); rCtx.fill();
             let bodyGrad = rCtx.createLinearGradient(0, 0, 0, 25); bodyGrad.addColorStop(0, '#ff3366'); bodyGrad.addColorStop(1, '#660022');
-            rCtx.fillStyle = bodyGrad; rCtx.beginPath(); rCtx.moveTo(0,15); rCtx.lineTo(15,5); rCtx.lineTo(45,2); rCtx.lineTo(65,10); rCtx.lineTo(85,14); rCtx.lineTo(82,22); rCtx.lineTo(0,22); rCtx.closePath(); rCtx.fill();
+            rCtx.fillStyle = bodyGrad;
+            rCtx.beginPath(); rCtx.moveTo(0,15); rCtx.lineTo(15,5); rCtx.lineTo(45,2); rCtx.lineTo(65,10); rCtx.lineTo(85,14); rCtx.lineTo(82,22); rCtx.lineTo(0,22); rCtx.closePath(); rCtx.fill();
             rCtx.fillStyle = 'rgba(0, 243, 255, 0.7)'; rCtx.beginPath(); rCtx.moveTo(20,6); rCtx.lineTo(43,4); rCtx.lineTo(60,10); rCtx.lineTo(43,11); rCtx.lineTo(20,11); rCtx.closePath(); rCtx.fill();
             rCtx.restore();
 
+            // Obstáculos
             for (let i = 0; i < rObstacles.length; i++) {
                 let obs = rObstacles[i]; obs.x -= rGameSpeed;
                 rCtx.save(); rCtx.translate(obs.x, obs.y);
@@ -413,7 +397,6 @@
                     rCtx.fillStyle = "rgba(0,0,0,0.75)"; rCtx.fillRect(0,0, rCanvas.width, rCanvas.height);
                     rCtx.fillStyle = "#ff0000"; rCtx.font = "40px Pricedown, sans-serif"; rCtx.textAlign = "center";
                     rCtx.shadowBlur = 20; rCtx.shadowColor = '#ff0000'; rCtx.fillText("WASTED", rCanvas.width/2, rCanvas.height/2);
-                    return;
                 }
             }
             if (rObstacles.length > 0 && rObstacles[0].x < -50) rObstacles.shift();
@@ -423,51 +406,77 @@
             if (rScore%10===0) document.getElementById('rScore').innerText = Math.floor(rScore/10);
             requestAnimationFrame(updateRunner);
         }
-        rCtx.fillStyle = "#fff"; rCtx.font = "26px Pricedown, sans-serif"; rCtx.textAlign = "center"; rCtx.fillText("TOCA PARA HUIR", rCanvas.width/2, rCanvas.height/2 + 10);
+
+        rCtx.fillStyle = "#fff"; rCtx.font = "26px Pricedown, sans-serif"; rCtx.textAlign = "center";
+        rCtx.fillText("TOCA PARA HUIR", rCanvas.width/2, rCanvas.height/2 + 10);
+        
         window.addEventListener('keydown', (e) => { if(e.code==='Space') { e.preventDefault(); rJump(); } });
-        rCanvas.addEventListener('mousedown', rJump); rCanvas.addEventListener('touchstart', (e) => { e.preventDefault(); rJump(); }, {passive: false});
+        rCanvas.addEventListener('mousedown', rJump);
+        rCanvas.addEventListener('touchstart', (e) => { e.preventDefault(); rJump(); }, {passive: false});
 
 
-        // --- 3. JUEGO 2: SHOOTER ---
+        // ==========================================================
+        // --- 3. MINIJUEGO 2: SHOOTER TOP-DOWN ---
+        // ==========================================================
         const sCanvas = document.getElementById("shooterCanvas");
         const sCtx = sCanvas.getContext("2d");
-        let sIsPlaying = false, sIsGameOver = false, sScore = 0, sTick = 0;
-        let sHighScore = localStorage.getItem('gtaShooterHighScore') || 0; document.getElementById('sHighScore').innerText = sHighScore;
+        
+        let sIsPlaying = false, sIsGameOver = false;
+        let sScore = 0, sTick = 0;
+        let sHighScore = localStorage.getItem('gtaShooterHighScore') || 0;
+        document.getElementById('sHighScore').innerText = sHighScore;
+
         const keys = { w: false, a: false, s: false, d: false, ArrowUp: false, ArrowDown: false, ArrowLeft: false, ArrowRight: false };
         let mouseX = sCanvas.width/2, mouseY = sCanvas.height/2;
+        
         let sPlayer = { x: 400, y: 175, radius: 12, speed: 3.5, angle: 0 };
-        let sBullets = [], sCops = [], sBlood = [];
+        let sBullets = [];
+        let sCops = [];
+        let sBlood = [];
 
         function initShooter() {
             sScore = 0; sTick = 0; sBullets = []; sCops = []; sBlood = [];
-            sPlayer.x = 400; sPlayer.y = 175; sIsGameOver = false; sIsPlaying = true;
+            sPlayer.x = 400; sPlayer.y = 175;
+            sIsGameOver = false; sIsPlaying = true;
             document.getElementById('sScore').innerText = sScore;
             requestAnimationFrame(updateShooter);
         }
+
         function sShoot() {
             if (!sIsPlaying || sIsGameOver) { initShooter(); return; }
-            sBullets.push({ x: sPlayer.x + Math.cos(sPlayer.angle) * 20, y: sPlayer.y + Math.sin(sPlayer.angle) * 20, vx: Math.cos(sPlayer.angle) * 12, vy: Math.sin(sPlayer.angle) * 12 });
+            sBullets.push({
+                x: sPlayer.x + Math.cos(sPlayer.angle) * 20, y: sPlayer.y + Math.sin(sPlayer.angle) * 20,
+                vx: Math.cos(sPlayer.angle) * 12, vy: Math.sin(sPlayer.angle) * 12
+            });
         }
+
         function updateShooter() {
             if (sIsGameOver) return;
             sTick++; sCtx.clearRect(0, 0, sCanvas.width, sCanvas.height);
+
             sCtx.fillStyle = '#1a1a24'; sCtx.fillRect(0, 0, sCanvas.width, sCanvas.height);
             sCtx.strokeStyle = 'rgba(255, 204, 0, 0.3)'; sCtx.lineWidth = 4; sCtx.setLineDash([20, 20]);
-            sCtx.beginPath(); sCtx.moveTo(0, sCanvas.height/2); sCtx.lineTo(sCanvas.width, sCanvas.height/2); sCtx.stroke(); sCtx.setLineDash([]); 
+            sCtx.beginPath(); sCtx.moveTo(0, sCanvas.height/2); sCtx.lineTo(sCanvas.width, sCanvas.height/2); sCtx.stroke();
+            sCtx.setLineDash([]); 
 
-            for (let b of sBlood) { sCtx.fillStyle = `rgba(180, 0, 0, ${b.a})`; sCtx.beginPath(); sCtx.arc(b.x, b.y, b.r, 0, Math.PI*2); sCtx.fill(); }
+            for (let b of sBlood) {
+                sCtx.fillStyle = `rgba(180, 0, 0, ${b.a})`;
+                sCtx.beginPath(); sCtx.arc(b.x, b.y, b.r, 0, Math.PI*2); sCtx.fill();
+            }
 
             let dx = 0, dy = 0;
             if (keys.w || keys.ArrowUp) dy -= sPlayer.speed;
             if (keys.s || keys.ArrowDown) dy += sPlayer.speed;
             if (keys.a || keys.ArrowLeft) dx -= sPlayer.speed;
             if (keys.d || keys.ArrowRight) dx += sPlayer.speed;
+            
             sPlayer.x = Math.max(15, Math.min(sCanvas.width - 15, sPlayer.x + dx));
             sPlayer.y = Math.max(15, Math.min(sCanvas.height - 15, sPlayer.y + dy));
             sPlayer.angle = Math.atan2(mouseY - sPlayer.y, mouseX - sPlayer.x);
 
             if (sTick % Math.max(20, 80 - Math.floor(sScore/2)) === 0) {
-                let side = Math.floor(Math.random() * 4), cx, cy;
+                let side = Math.floor(Math.random() * 4);
+                let cx, cy;
                 if (side===0) { cx = Math.random()*sCanvas.width; cy = -20; }
                 else if (side===1) { cx = sCanvas.width+20; cy = Math.random()*sCanvas.height; }
                 else if (side===2) { cx = Math.random()*sCanvas.width; cy = sCanvas.height+20; }
@@ -476,28 +485,38 @@
             }
 
             for (let i = sBullets.length - 1; i >= 0; i--) {
-                let b = sBullets[i]; b.x += b.vx; b.y += b.vy;
-                sCtx.strokeStyle = '#ffcc00'; sCtx.lineWidth = 3; sCtx.beginPath(); sCtx.moveTo(b.x, b.y); sCtx.lineTo(b.x - b.vx, b.y - b.vy); sCtx.stroke();
+                let b = sBullets[i];
+                b.x += b.vx; b.y += b.vy;
+                sCtx.strokeStyle = '#ffcc00'; sCtx.lineWidth = 3;
+                sCtx.beginPath(); sCtx.moveTo(b.x, b.y); sCtx.lineTo(b.x - b.vx, b.y - b.vy); sCtx.stroke();
+
                 if (b.x < 0 || b.x > sCanvas.width || b.y < 0 || b.y > sCanvas.height) { sBullets.splice(i, 1); continue; }
+
                 for (let j = sCops.length - 1; j >= 0; j--) {
                     let cop = sCops[j];
                     if (Math.hypot(b.x - cop.x, b.y - cop.y) < cop.radius + 5) {
                         sBlood.push({ x: cop.x, y: cop.y, r: Math.random()*10+10, a: 0.8 });
-                        sCops.splice(j, 1); sBullets.splice(i, 1); sScore++; document.getElementById('sScore').innerText = sScore; break;
+                        sCops.splice(j, 1); sBullets.splice(i, 1); sScore++;
+                        document.getElementById('sScore').innerText = sScore;
+                        break;
                     }
                 }
             }
 
             for (let i = sCops.length - 1; i >= 0; i--) {
-                let cop = sCops[i]; let angle = Math.atan2(sPlayer.y - cop.y, sPlayer.x - cop.x);
+                let cop = sCops[i];
+                let angle = Math.atan2(sPlayer.y - cop.y, sPlayer.x - cop.x);
                 cop.x += Math.cos(angle) * cop.speed; cop.y += Math.sin(angle) * cop.speed;
+
                 if (Math.hypot(sPlayer.x - cop.x, sPlayer.y - cop.y) < sPlayer.radius + cop.radius) {
                     sIsGameOver = true; sIsPlaying = false;
                     if (sScore > sHighScore) { sHighScore = sScore; localStorage.setItem('gtaShooterHighScore', sHighScore); document.getElementById('sHighScore').innerText = sHighScore; }
                 }
+
                 sCtx.save(); sCtx.translate(cop.x, cop.y); sCtx.rotate(angle);
                 sCtx.fillStyle = '#0a1930'; sCtx.beginPath(); sCtx.ellipse(0, 0, 10, 16, 0, 0, Math.PI*2); sCtx.fill();
-                sCtx.fillStyle = '#f1c27d'; sCtx.beginPath(); sCtx.arc(10, -10, 4, 0, Math.PI*2); sCtx.fill(); sCtx.beginPath(); sCtx.arc(10, 10, 4, 0, Math.PI*2); sCtx.fill();
+                sCtx.fillStyle = '#f1c27d'; sCtx.beginPath(); sCtx.arc(10, -10, 4, 0, Math.PI*2); sCtx.fill();
+                sCtx.beginPath(); sCtx.arc(10, 10, 4, 0, Math.PI*2); sCtx.fill();
                 sCtx.beginPath(); sCtx.arc(0, 0, 8, 0, Math.PI*2); sCtx.fill();
                 sCtx.fillStyle = '#0a1930'; sCtx.beginPath(); sCtx.arc(-2, 0, 8, 0, Math.PI*2); sCtx.fill();
                 sCtx.fillStyle = '#111'; sCtx.beginPath(); sCtx.arc(4, 0, 6, -Math.PI/3, Math.PI/3); sCtx.fill();
@@ -506,7 +525,8 @@
 
             sCtx.save(); sCtx.translate(sPlayer.x, sPlayer.y); sCtx.rotate(sPlayer.angle);
             sCtx.fillStyle = '#ff3366'; sCtx.beginPath(); sCtx.ellipse(0, 0, 12, 18, 0, 0, Math.PI*2); sCtx.fill();
-            sCtx.fillStyle = '#f1c27d'; sCtx.beginPath(); sCtx.arc(15, -9, 4, 0, Math.PI*2); sCtx.fill(); sCtx.beginPath(); sCtx.arc(15, 9, 4, 0, Math.PI*2); sCtx.fill();
+            sCtx.fillStyle = '#f1c27d'; sCtx.beginPath(); sCtx.arc(15, -9, 4, 0, Math.PI*2); sCtx.fill();
+            sCtx.beginPath(); sCtx.arc(15, 9, 4, 0, Math.PI*2); sCtx.fill();
             sCtx.fillStyle = '#222'; sCtx.fillRect(15, -11, 15, 4);
             sCtx.fillStyle = '#f1c27d'; sCtx.beginPath(); sCtx.arc(0, 0, 9, 0, Math.PI*2); sCtx.fill();
             sCtx.fillStyle = '#4a2511'; sCtx.beginPath(); sCtx.arc(-2, 0, 9, -Math.PI/2, Math.PI/2, true); sCtx.fill();
@@ -518,31 +538,46 @@
                 sCtx.shadowBlur = 20; sCtx.shadowColor = '#ff0000'; sCtx.fillText("BUSTED", sCanvas.width/2, sCanvas.height/2);
                 sCtx.shadowBlur = 0; sCtx.fillStyle = "#fff"; sCtx.font = "14px Montserrat, sans-serif";
                 sCtx.fillText("Toca para reiniciar", sCanvas.width/2, sCanvas.height/2 + 40);
-                return;
+            } else {
+                requestAnimationFrame(updateShooter);
             }
-            requestAnimationFrame(updateShooter);
         }
-        sCtx.fillStyle = "#fff"; sCtx.font = "26px Pricedown, sans-serif"; sCtx.textAlign = "center"; sCtx.fillText("TOCA PARA EMPEZAR A DISPARAR", sCanvas.width/2, sCanvas.height/2 + 10);
+
+        sCtx.fillStyle = "#fff"; sCtx.font = "26px Pricedown, sans-serif"; sCtx.textAlign = "center";
+        sCtx.fillText("TOCA PARA EMPEZAR A DISPARAR", sCanvas.width/2, sCanvas.height/2 + 10);
+
         window.addEventListener('keydown', (e) => { if (keys.hasOwnProperty(e.code)) keys[e.code] = true; });
         window.addEventListener('keyup', (e) => { if (keys.hasOwnProperty(e.code)) keys[e.code] = false; });
+        
         function updateMousePos(e) {
             const rect = sCanvas.getBoundingClientRect();
-            let clientX = e.touches ? e.touches[0].clientX : e.clientX, clientY = e.touches ? e.touches[0].clientY : e.clientY;
-            mouseX = (clientX - rect.left) * (sCanvas.width / rect.width); mouseY = (clientY - rect.top) * (sCanvas.height / rect.height);
+            let clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            let clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            mouseX = (clientX - rect.left) * (sCanvas.width / rect.width);
+            mouseY = (clientY - rect.top) * (sCanvas.height / rect.height);
         }
+
         sCanvas.addEventListener('mousemove', updateMousePos);
         sCanvas.addEventListener('mousedown', (e) => { updateMousePos(e); sShoot(); });
         sCanvas.addEventListener('touchmove', (e) => { e.preventDefault(); updateMousePos(e); }, {passive: false});
         sCanvas.addEventListener('touchstart', (e) => { e.preventDefault(); updateMousePos(e); sShoot(); }, {passive: false});
 
 
-        // --- 4. JUEGO 3: HIGHWAY ---
+        // ==========================================================
+        // --- 4. MINIJUEGO 3: HIGHWAY GETAWAY (Coches Top-Down) ---
+        // ==========================================================
         const hCanvas = document.getElementById("highwayCanvas");
         const hCtx = hCanvas.getContext("2d");
-        let hIsPlaying = false, hIsGameOver = false, hScore = 0, hTick = 0, hRoadOffset = 0, hSpeed = 8;
-        let hHighScore = localStorage.getItem('gtaHighwayHighScore') || 0; document.getElementById('hHighScore').innerText = hHighScore;
+        
+        let hIsPlaying = false, hIsGameOver = false;
+        let hScore = 0, hTick = 0, hRoadOffset = 0;
+        let hHighScore = localStorage.getItem('gtaHighwayHighScore') || 0;
+        document.getElementById('hHighScore').innerText = hHighScore;
+
+        let hSpeed = 8; // Velocidad de la carretera
         let hPlayer = { x: 400, y: 260, width: 36, height: 70, speed: 6 };
         let hTraffic = [];
+        
         const hKeys = { a: false, d: false, ArrowLeft: false, ArrowRight: false };
 
         function initHighway() {
@@ -551,292 +586,192 @@
             document.getElementById('hScore').innerText = hScore;
             requestAnimationFrame(updateHighway);
         }
+
+        // Función para dibujar los coches (Jugador y Tráfico)
         function drawCarTopDown(ctx, x, y, w, h, bodyColor, isPlayer) {
-            ctx.save(); ctx.translate(x, y);
-            ctx.fillStyle = 'rgba(0,0,0,0.5)'; ctx.fillRect(5, 5, w, h);
-            ctx.fillStyle = bodyColor; ctx.fillRect(0, 0, w, h);
-            ctx.fillStyle = '#111'; ctx.fillRect(4, 15, w-8, h-30);
-            ctx.fillStyle = 'rgba(0, 243, 255, 0.3)'; ctx.fillRect(4, 15, w-8, 12); ctx.fillRect(4, h-27, w-8, 12);
+            ctx.save();
+            ctx.translate(x, y);
+            
+            // Sombra
+            ctx.fillStyle = 'rgba(0,0,0,0.5)';
+            ctx.fillRect(5, 5, w, h);
+            
+            // Chasis
+            ctx.fillStyle = bodyColor;
+            ctx.fillRect(0, 0, w, h);
+            
+            // Techo / Cristales tintados
+            ctx.fillStyle = '#111';
+            ctx.fillRect(4, 15, w-8, h-30);
+            
+            // Reflejo en luna delantera y trasera
+            ctx.fillStyle = 'rgba(0, 243, 255, 0.3)';
+            ctx.fillRect(4, 15, w-8, 12);
+            ctx.fillRect(4, h-27, w-8, 12);
+
+            // Luces
             if (isPlayer) {
-                ctx.fillStyle = '#ffffff'; ctx.shadowBlur = 15; ctx.shadowColor = '#ffffff';
-                ctx.fillRect(3, -2, 8, 4); ctx.fillRect(w-11, -2, 8, 4);
-                ctx.fillStyle = '#ff0000'; ctx.shadowBlur = 15; ctx.shadowColor = '#ff0000';
-                ctx.fillRect(3, h-2, 8, 4); ctx.fillRect(w-11, h-2, 8, 4);
+                // Faros iluminando
+                ctx.fillStyle = '#ffffff';
+                ctx.shadowBlur = 15; ctx.shadowColor = '#ffffff';
+                ctx.fillRect(3, -2, 8, 4);
+                ctx.fillRect(w-11, -2, 8, 4);
+                // Luces de freno
+                ctx.fillStyle = '#ff0000';
+                ctx.shadowBlur = 15; ctx.shadowColor = '#ff0000';
+                ctx.fillRect(3, h-2, 8, 4);
+                ctx.fillRect(w-11, h-2, 8, 4);
             } else {
-                ctx.fillStyle = '#cc0000'; ctx.shadowBlur = 5; ctx.shadowColor = '#cc0000';
-                ctx.fillRect(3, h-2, 8, 4); ctx.fillRect(w-11, h-2, 8, 4);
+                // Tráfico frenando levemente
+                ctx.fillStyle = '#cc0000';
+                ctx.shadowBlur = 5; ctx.shadowColor = '#cc0000';
+                ctx.fillRect(3, h-2, 8, 4);
+                ctx.fillRect(w-11, h-2, 8, 4);
             }
             ctx.restore();
         }
+
         function updateHighway() {
             if (hIsGameOver) return;
             hTick++; hCtx.clearRect(0, 0, hCanvas.width, hCanvas.height);
-            hCtx.fillStyle = '#080808'; hCtx.fillRect(0, 0, 150, hCanvas.height); hCtx.fillRect(650, 0, 150, hCanvas.height);
-            hCtx.fillStyle = '#1a1a24'; hCtx.fillRect(150, 0, 500, hCanvas.height);
+
+            // Dibujar Entorno (Autopista)
+            // Arcenes / Laterales oscuros
+            hCtx.fillStyle = '#080808'; 
+            hCtx.fillRect(0, 0, 150, hCanvas.height);
+            hCtx.fillRect(650, 0, 150, hCanvas.height);
+            
+            // Asfalto
+            hCtx.fillStyle = '#1a1a24';
+            hCtx.fillRect(150, 0, 500, hCanvas.height);
+
+            // Líneas continuas amarillas (bordes)
             hCtx.strokeStyle = '#ffcc00'; hCtx.lineWidth = 4;
             hCtx.beginPath(); hCtx.moveTo(152, 0); hCtx.lineTo(152, hCanvas.height); hCtx.stroke();
             hCtx.beginPath(); hCtx.moveTo(648, 0); hCtx.lineTo(648, hCanvas.height); hCtx.stroke();
-            hRoadOffset += hSpeed; if (hRoadOffset >= 60) hRoadOffset = 0;
+
+            // Líneas discontinuas blancas (carriles)
+            hRoadOffset += hSpeed;
+            if (hRoadOffset >= 60) hRoadOffset = 0;
+            
             hCtx.fillStyle = 'rgba(255, 255, 255, 0.6)';
             for (let i = -60; i < hCanvas.height; i += 60) {
-                hCtx.fillRect(273, i + hRoadOffset, 4, 30); hCtx.fillRect(398, i + hRoadOffset, 4, 30); hCtx.fillRect(523, i + hRoadOffset, 4, 30);
+                // 4 carriles = 3 separadores (en x: 275, 400, 525)
+                hCtx.fillRect(273, i + hRoadOffset, 4, 30);
+                hCtx.fillRect(398, i + hRoadOffset, 4, 30);
+                hCtx.fillRect(523, i + hRoadOffset, 4, 30);
             }
+
+            // Movimiento del Jugador
             if (hKeys.a || hKeys.ArrowLeft) hPlayer.x -= hPlayer.speed;
             if (hKeys.d || hKeys.ArrowRight) hPlayer.x += hPlayer.speed;
+            
+            // Limitar coche a la carretera
             hPlayer.x = Math.max(160, Math.min(640 - hPlayer.width, hPlayer.x));
 
+            // Dibujar Jugador (Deportivo Rosa con gradiente)
             let pGrad = hCtx.createLinearGradient(hPlayer.x, hPlayer.y, hPlayer.x, hPlayer.y+hPlayer.height);
             pGrad.addColorStop(0, '#ff3366'); pGrad.addColorStop(1, '#990033');
             drawCarTopDown(hCtx, hPlayer.x, hPlayer.y, hPlayer.width, hPlayer.height, pGrad, true);
 
-            let spawnRate = Math.max(15, 60 - Math.floor(hScore/50)); 
+            // Generar Tráfico
+            let spawnRate = Math.max(15, 60 - Math.floor(hScore/50)); // Más tráfico según avanzas
             if (hTick % spawnRate === 0) {
-                let lanes = [190, 315, 440, 565], laneX = lanes[Math.floor(Math.random() * lanes.length)];
-                let carColors = ['#ffffff', '#222222', '#0055ff', '#ffaa00', '#009933'], cColor = carColors[Math.floor(Math.random() * carColors.length)];
-                let isTruck = Math.random() > 0.8, cWidth = isTruck ? 40 : 36, cHeight = isTruck ? 90 : 70;
-                hTraffic.push({ x: laneX + (Math.random()*10-5), y: -100, width: cWidth, height: cHeight, speed: Math.random()*3+2, color: cColor });
+                // Escoger un carril aleatorio (1 a 4) aprox
+                let lanes = [190, 315, 440, 565];
+                let laneX = lanes[Math.floor(Math.random() * lanes.length)];
+                let carColors = ['#ffffff', '#222222', '#0055ff', '#ffaa00', '#009933'];
+                let cColor = carColors[Math.floor(Math.random() * carColors.length)];
+                
+                // Variar el tamaño para que parezcan coches y camionetas
+                let isTruck = Math.random() > 0.8;
+                let cWidth = isTruck ? 40 : 36;
+                let cHeight = isTruck ? 90 : 70;
+                
+                hTraffic.push({ 
+                    x: laneX + (Math.random() * 10 - 5), // Pequeña variación dentro del carril
+                    y: -100, 
+                    width: cWidth, 
+                    height: cHeight, 
+                    speed: Math.random() * 3 + 2, // Van más lentos que la carretera
+                    color: cColor 
+                });
             }
 
+            // Actualizar y dibujar Tráfico
             for (let i = hTraffic.length - 1; i >= 0; i--) {
-                let t = hTraffic[i]; t.y += (hSpeed - t.speed); 
+                let t = hTraffic[i];
+                // Los coches se mueven "hacia abajo" porque tú vas más rápido que ellos
+                t.y += (hSpeed - t.speed); 
+                
                 drawCarTopDown(hCtx, t.x, t.y, t.width, t.height, t.color, false);
+
+                // Colisión (Caja de colisión estricta)
                 let margin = 4;
-                if (hPlayer.x+margin < t.x+t.width-margin && hPlayer.x+hPlayer.width-margin > t.x+margin && hPlayer.y+margin < t.y+t.height-margin && hPlayer.y+hPlayer.height-margin > t.y+margin) {
+                if (hPlayer.x + margin < t.x + t.width - margin &&
+                    hPlayer.x + hPlayer.width - margin > t.x + margin &&
+                    hPlayer.y + margin < t.y + t.height - margin &&
+                    hPlayer.y + hPlayer.height - margin > t.y + margin) {
+                    
                     hIsGameOver = true; hIsPlaying = false;
                     let final = Math.floor(hScore/10);
                     if (final > hHighScore) { hHighScore = final; localStorage.setItem('gtaHighwayHighScore', hHighScore); document.getElementById('hHighScore').innerText = hHighScore; }
+                    
                     hCtx.fillStyle = "rgba(0,0,0,0.8)"; hCtx.fillRect(0,0, hCanvas.width, hCanvas.height);
                     hCtx.fillStyle = "#ff0000"; hCtx.font = "40px Pricedown, sans-serif"; hCtx.textAlign = "center";
                     hCtx.shadowBlur = 20; hCtx.shadowColor = '#ff0000'; hCtx.fillText("WASTED", hCanvas.width/2, hCanvas.height/2);
                     hCtx.shadowBlur = 0; hCtx.fillStyle = "#fff"; hCtx.font = "14px Montserrat, sans-serif";
                     hCtx.fillText("Te has estrellado. Toca para reiniciar", hCanvas.width/2, hCanvas.height/2 + 40);
-                    return;
                 }
-                if (t.y > hCanvas.height + 20) hTraffic.splice(i, 1);
+
+                // Borrar si salen de la pantalla por abajo
+                if (t.y > hCanvas.height + 20) {
+                    hTraffic.splice(i, 1);
+                }
             }
-            hScore++; if (hScore % 200 === 0) hSpeed += 0.5;
+
+            // Puntuación
+            hScore++; 
+            if (hScore % 200 === 0) hSpeed += 0.5; // Acelerar el juego
             if (hScore % 10 === 0) document.getElementById('hScore').innerText = Math.floor(hScore/10);
-            requestAnimationFrame(updateHighway);
+            
+            if (!hIsGameOver) {
+                requestAnimationFrame(updateHighway);
+            }
         }
-        hCtx.fillStyle = "#fff"; hCtx.font = "26px Pricedown, sans-serif"; hCtx.textAlign = "center"; hCtx.fillText("TOCA PARA EMPEZAR A CONDUCIR", hCanvas.width/2, hCanvas.height/2 + 10);
-        window.addEventListener('keydown', (e) => { if (hKeys.hasOwnProperty(e.code)) hKeys[e.code] = true; if(e.key==='a' || e.key==='A') hKeys.a = true; if(e.key==='d' || e.key==='D') hKeys.d = true; });
-        window.addEventListener('keyup', (e) => { if (hKeys.hasOwnProperty(e.code)) hKeys[e.code] = false; if(e.key==='a' || e.key==='A') hKeys.a = false; if(e.key==='d' || e.key==='D') hKeys.d = false; });
+
+        // Pantalla inicial de Highway
+        hCtx.fillStyle = "#fff"; hCtx.font = "26px Pricedown, sans-serif"; hCtx.textAlign = "center";
+        hCtx.fillText("TOCA PARA EMPEZAR A CONDUCIR", hCanvas.width/2, hCanvas.height/2 + 10);
+
+        // Controles de Teclado
+        window.addEventListener('keydown', (e) => { if (hKeys.hasOwnProperty(e.code)) hKeys[e.code] = true; });
+        window.addEventListener('keyup', (e) => { if (hKeys.hasOwnProperty(e.code)) hKeys[e.code] = false; });
+        window.addEventListener('keydown', (e) => { if(e.key==='a' || e.key==='A') hKeys.a = true; if(e.key==='d' || e.key==='D') hKeys.d = true; });
+        window.addEventListener('keyup', (e) => { if(e.key==='a' || e.key==='A') hKeys.a = false; if(e.key==='d' || e.key==='D') hKeys.d = false; });
+        
+        // Controles Táctiles y de Ratón
         function handleHighwayTouch(e) {
             if (!hIsPlaying || hIsGameOver) { initHighway(); return; }
-            let rect = hCanvas.getBoundingClientRect(), x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
-            if (x < rect.width / 2) { hKeys.a = true; hKeys.d = false; } else { hKeys.d = true; hKeys.a = false; }
+            const rect = hCanvas.getBoundingClientRect();
+            let clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            let x = clientX - rect.left;
+            
+            // Tocar lado izquierdo gira a la izquierda, derecho a la derecha
+            if (x < rect.width / 2) { hKeys.a = true; hKeys.d = false; }
+            else { hKeys.d = true; hKeys.a = false; }
         }
-        function releaseHighwayTouch() { hKeys.a = false; hKeys.d = false; }
-        hCanvas.addEventListener('mousedown', handleHighwayTouch); hCanvas.addEventListener('mouseup', releaseHighwayTouch); hCanvas.addEventListener('mouseleave', releaseHighwayTouch);
+
+        function releaseHighwayTouch() {
+            hKeys.a = false; hKeys.d = false;
+        }
+
+        hCanvas.addEventListener('mousedown', handleHighwayTouch);
+        hCanvas.addEventListener('mouseup', releaseHighwayTouch);
+        hCanvas.addEventListener('mouseleave', releaseHighwayTouch);
         hCanvas.addEventListener('touchstart', (e) => { e.preventDefault(); handleHighwayTouch(e); }, {passive: false});
         hCanvas.addEventListener('touchend', (e) => { e.preventDefault(); releaseHighwayTouch(); }, {passive: false});
 
-
-        // --- 5. JUEGO 4: AIRBOAT ---
-        const abCanvas = document.getElementById("airboatCanvas");
-        const abCtx = abCanvas.getContext("2d");
-        let abIsPlaying = false, abIsGameOver = false, abScore = 0, abTick = 0, abWaterOffset = 0, abSpeed = 6;
-        let abHighScore = localStorage.getItem('gtaAirboatHighScore') || 0; document.getElementById('abHighScore').innerText = abHighScore;
-        let abPlayer = { x: 400, y: 260, w: 40, h: 70, speed: 7 }, abObstacles = [];
-        const abKeys = { a: false, d: false };
-
-        function initAirboat() {
-            abObstacles = []; abScore = 0; abTick = 0; abSpeed = 6; abPlayer.x = 400; abIsGameOver = false; abIsPlaying = true;
-            document.getElementById('abScore').innerText = abScore; requestAnimationFrame(updateAirboat);
-        }
-        function updateAirboat() {
-            if (abIsGameOver) return; abTick++; abCtx.clearRect(0, 0, abCanvas.width, abCanvas.height);
-            abCtx.fillStyle = '#003344'; abCtx.fillRect(0, 0, abCanvas.width, abCanvas.height);
-            abWaterOffset += abSpeed; if (abWaterOffset >= 100) abWaterOffset = 0;
-            abCtx.fillStyle = 'rgba(0, 243, 255, 0.1)';
-            for(let i=-100; i<abCanvas.height; i+=100) { abCtx.fillRect(0, i+abWaterOffset, abCanvas.width, 10); }
-
-            if (abKeys.a) abPlayer.x -= abPlayer.speed; if (abKeys.d) abPlayer.x += abPlayer.speed;
-            abPlayer.x = Math.max(20, Math.min(abCanvas.width - abPlayer.w - 20, abPlayer.x));
-
-            abCtx.save(); abCtx.translate(abPlayer.x, abPlayer.y);
-            abCtx.fillStyle = '#8B4513'; abCtx.fillRect(0, 0, abPlayer.w, abPlayer.h);
-            abCtx.fillStyle = '#333'; abCtx.beginPath(); abCtx.arc(abPlayer.w/2, abPlayer.h-10, 15, 0, Math.PI*2); abCtx.fill();
-            abCtx.fillStyle = '#aaa'; abCtx.save(); abCtx.translate(abPlayer.w/2, abPlayer.h-10); abCtx.rotate(abTick*0.5);
-            abCtx.fillRect(-2, -12, 4, 24); abCtx.fillRect(-12, -2, 24, 4); abCtx.restore();
-            abCtx.restore();
-
-            if (abTick % Math.max(20, 60 - Math.floor(abScore/40)) === 0) {
-                let isGator = Math.random() > 0.5;
-                abObstacles.push({ x: Math.random()*(abCanvas.width-60)+30, y: -50, w: isGator?20:30, h: isGator?50:80, type: isGator?1:0, speed: (Math.random()*2+1)*(isGator?-0.5:1) });
-            }
-
-            for (let i = abObstacles.length - 1; i >= 0; i--) {
-                let obs = abObstacles[i]; obs.y += (abSpeed - obs.speed);
-                abCtx.save(); abCtx.translate(obs.x, obs.y);
-                if (obs.type === 1) {
-                    abCtx.fillStyle = '#009933'; abCtx.beginPath(); abCtx.ellipse(obs.w/2, obs.h/2, obs.w/2, obs.h/2, 0, 0, Math.PI*2); abCtx.fill();
-                } else {
-                    abCtx.fillStyle = '#4a2511'; abCtx.fillRect(0, 0, obs.w, obs.h);
-                }
-                abCtx.restore();
-
-                let m = 5;
-                if (abPlayer.x+m < obs.x+obs.w-m && abPlayer.x+abPlayer.w-m > obs.x+m && abPlayer.y+m < obs.y+obs.h-m && abPlayer.y+abPlayer.h-m > obs.y+m) {
-                    abIsGameOver = true; abIsPlaying = false;
-                    let final = Math.floor(abScore/10); if (final > abHighScore) { abHighScore = final; localStorage.setItem('gtaAirboatHighScore', abHighScore); document.getElementById('abHighScore').innerText = abHighScore; }
-                    abCtx.fillStyle = "rgba(0,0,0,0.8)"; abCtx.fillRect(0,0, abCanvas.width, abCanvas.height);
-                    abCtx.fillStyle = "#ff0000"; abCtx.font = "40px Pricedown, sans-serif"; abCtx.textAlign = "center"; abCtx.fillText("WASTED", abCanvas.width/2, abCanvas.height/2);
-                    return;
-                }
-                if (obs.y > abCanvas.height + 20) abObstacles.splice(i, 1);
-            }
-            abScore++; if (abScore % 200 === 0) abSpeed += 0.5;
-            if (abScore % 10 === 0) document.getElementById('abScore').innerText = Math.floor(abScore/10);
-            requestAnimationFrame(updateAirboat);
-        }
-        abCtx.fillStyle = "#fff"; abCtx.font = "26px Pricedown, sans-serif"; abCtx.textAlign = "center"; abCtx.fillText("TOCA PARA HUIR", abCanvas.width/2, abCanvas.height/2 + 10);
-        window.addEventListener('keydown', (e) => { if(e.key==='a' || e.key==='A' || e.code==='ArrowLeft') abKeys.a = true; if(e.key==='d' || e.key==='D' || e.code==='ArrowRight') abKeys.d = true; });
-        window.addEventListener('keyup', (e) => { if(e.key==='a' || e.key==='A' || e.code==='ArrowLeft') abKeys.a = false; if(e.key==='d' || e.key==='D' || e.code==='ArrowRight') abKeys.d = false; });
-        function handleAbTouch(e) { if (!abIsPlaying || abIsGameOver) { initAirboat(); return; } let x = (e.touches ? e.touches[0].clientX : e.clientX) - abCanvas.getBoundingClientRect().left; if (x < abCanvas.width/2) { abKeys.a=true; abKeys.d=false; } else { abKeys.d=true; abKeys.a=false; } }
-        function releaseAbTouch() { abKeys.a=false; abKeys.d=false; }
-        abCanvas.addEventListener('mousedown', handleAbTouch); abCanvas.addEventListener('mouseup', releaseAbTouch); abCanvas.addEventListener('mouseleave', releaseAbTouch);
-        abCanvas.addEventListener('touchstart', (e) => { e.preventDefault(); handleAbTouch(e); }, {passive:false}); abCanvas.addEventListener('touchend', (e) => { e.preventDefault(); releaseAbTouch(); }, {passive:false});
-
-
-        // --- 6. JUEGO 5: VIRAL CATCH ---
-        const vCanvas = document.getElementById("viralCanvas");
-        const vCtx = vCanvas.getContext("2d");
-        let vIsPlaying = false, vIsGameOver = false, vScore = 0, vEvents = [], vTick = 0;
-        let vHighScore = localStorage.getItem('gtaViralHighScore') || 0; document.getElementById('vHighScore').innerText = vHighScore;
-        const vEmojis = ['🐊', '🔨', '🚗', '🚓', '💃', '🦩'];
-
-        function initViral() {
-            vEvents = []; vScore = 0; vTick = 0; vIsGameOver = false; vIsPlaying = true;
-            document.getElementById('vScore').innerText = vScore; requestAnimationFrame(updateViral);
-        }
-        function updateViral() {
-            if (vIsGameOver) return; vTick++; vCtx.clearRect(0, 0, vCanvas.width, vCanvas.height);
-            vCtx.fillStyle = '#ff3366'; vCtx.font = "20px Arial"; vCtx.fillText("🔴 REC", 10, 30);
-            vCtx.fillStyle = '#fff'; vCtx.textAlign="right"; vCtx.fillText(vScore + " ❤️", vCanvas.width-10, 30); vCtx.textAlign="left";
-
-            if (vTick % Math.max(30, 80 - Math.floor(vScore)) === 0) {
-                let eStr = vEmojis[Math.floor(Math.random()*vEmojis.length)];
-                vEvents.push({ x: Math.random()*(vCanvas.width-60)+30, y: Math.random()*(vCanvas.height-100)+50, emoji: eStr, life: 60 });
-            }
-
-            for (let i = vEvents.length - 1; i >= 0; i--) {
-                let ev = vEvents[i]; ev.life--;
-                vCtx.font = "40px Arial"; vCtx.fillText(ev.emoji, ev.x-20, ev.y+15);
-                vCtx.strokeStyle = 'rgba(255,255,255,'+(ev.life/60)+')'; vCtx.lineWidth = 2;
-                vCtx.strokeRect(ev.x-25, ev.y-25, 50, 50);
-                if (ev.life <= 0) {
-                    vIsGameOver = true; vIsPlaying = false;
-                    if (vScore > vHighScore) { vHighScore = vScore; localStorage.setItem('gtaViralHighScore', vHighScore); document.getElementById('vHighScore').innerText = vHighScore; }
-                    vCtx.fillStyle = "rgba(0,0,0,0.8)"; vCtx.fillRect(0,0, vCanvas.width, vCanvas.height);
-                    vCtx.fillStyle = "#ff3366"; vCtx.font = "30px Pricedown, sans-serif"; vCtx.textAlign = "center"; vCtx.fillText("CANCELADO", vCanvas.width/2, vCanvas.height/2);
-                    return;
-                }
-            }
-            requestAnimationFrame(updateViral);
-        }
-        vCtx.fillStyle = "#00f3ff"; vCtx.font = "20px Pricedown, sans-serif"; vCtx.textAlign = "center"; vCtx.fillText("TOCA PARA GRABAR", vCanvas.width/2, vCanvas.height/2);
-        function handleViralClick(e) {
-            if (!vIsPlaying || vIsGameOver) { initViral(); return; }
-            let rect = vCanvas.getBoundingClientRect();
-            let x = ((e.touches ? e.touches[0].clientX : e.clientX) - rect.left) * (vCanvas.width / rect.width);
-            let y = ((e.touches ? e.touches[0].clientY : e.clientY) - rect.top) * (vCanvas.height / rect.height);
-            for (let i = vEvents.length - 1; i >= 0; i--) {
-                let ev = vEvents[i];
-                if (Math.hypot(x - ev.x, y - ev.y) < 35) { vEvents.splice(i, 1); vScore++; document.getElementById('vScore').innerText = vScore; break; }
-            }
-        }
-        vCanvas.addEventListener('mousedown', handleViralClick); vCanvas.addEventListener('touchstart', (e) => { e.preventDefault(); handleViralClick(e); }, {passive:false});
-
-
-        // --- 7. JUEGO 6: SKATER ---
-        const skCanvas = document.getElementById("skaterCanvas");
-        const skCtx = skCanvas.getContext("2d");
-        let skIsPlaying = false, skIsGameOver = false, skScore = 0, skSpeed = 6;
-        let skHighScore = localStorage.getItem('gtaSkaterHighScore') || 0; document.getElementById('skHighScore').innerText = skHighScore;
-        let skPlayer = { x: 50, y: 180, w: 30, h: 40, dy: 0, jumpForce: -12, grounded: true }, skObstacles = [];
-
-        function initSkater() { skObstacles = []; skScore = 0; skSpeed = 6; skPlayer.y = 180; skPlayer.dy = 0; skIsGameOver = false; skIsPlaying = true; document.getElementById('skScore').innerText = skScore; requestAnimationFrame(updateSkater); }
-        function skJump() { if (!skIsPlaying || skIsGameOver) { initSkater(); return; } if (skPlayer.grounded) { skPlayer.dy = skPlayer.jumpForce; skPlayer.grounded = false; } }
-        function updateSkater() {
-            if (skIsGameOver) return; skCtx.clearRect(0, 0, skCanvas.width, skCanvas.height);
-            skCtx.fillStyle = '#ffcc88'; skCtx.fillRect(0, 220, skCanvas.width, 30);
-            skCtx.fillStyle = 'rgba(0, 243, 255, 0.4)'; skCtx.fillRect(0, 180, skCanvas.width, 40);
-            skCtx.strokeStyle = '#ff3366'; skCtx.lineWidth = 4; skCtx.beginPath(); skCtx.moveTo(0, 220); skCtx.lineTo(skCanvas.width, 220); skCtx.stroke();
-            
-            skPlayer.dy += 0.6; skPlayer.y += skPlayer.dy;
-            if (skPlayer.y + skPlayer.h >= 220) { skPlayer.y = 220 - skPlayer.h; skPlayer.dy = 0; skPlayer.grounded = true; }
-            skCtx.font = "40px Arial"; skCtx.fillText("🛼", skPlayer.x, skPlayer.y+35);
-
-            if (Math.random() < 0.015 + (skScore/10000)) {
-                let isBird = Math.random() > 0.6;
-                if (skObstacles.length === 0 || skCanvas.width - skObstacles[skObstacles.length-1].x > 250) {
-                    skObstacles.push({ x: skCanvas.width, y: isBird ? 130 : 190, emoji: isBird ? '🦆' : '🐕', w: 30, h: 30 });
-                }
-            }
-
-            for (let i = skObstacles.length - 1; i >= 0; i--) {
-                let obs = skObstacles[i]; obs.x -= skSpeed;
-                skCtx.font = "30px Arial"; skCtx.fillText(obs.emoji, obs.x, obs.y+25);
-                let m = 5;
-                if (skPlayer.x+m < obs.x+obs.w-m && skPlayer.x+skPlayer.w-m > obs.x+m && skPlayer.y+m < obs.y+obs.h-m && skPlayer.y+skPlayer.h-m > obs.y+m) {
-                    skIsGameOver = true; skIsPlaying = false;
-                    let final = Math.floor(skScore/10); if (final > skHighScore) { skHighScore = final; localStorage.setItem('gtaSkaterHighScore', skHighScore); document.getElementById('skHighScore').innerText = skHighScore; }
-                    skCtx.fillStyle = "rgba(0,0,0,0.7)"; skCtx.fillRect(0,0, skCanvas.width, skCanvas.height);
-                    skCtx.fillStyle = "#ff0000"; skCtx.font = "40px Pricedown, sans-serif"; skCtx.textAlign = "center"; skCtx.fillText("WASTED", skCanvas.width/2, skCanvas.height/2);
-                    return;
-                }
-                if (obs.x < -40) skObstacles.splice(i, 1);
-            }
-            skScore++; if (skScore % 200 === 0) skSpeed += 0.5;
-            if (skScore % 10 === 0) document.getElementById('skScore').innerText = Math.floor(skScore/10);
-            requestAnimationFrame(updateSkater);
-        }
-        skCtx.fillStyle = "#fff"; skCtx.font = "26px Pricedown, sans-serif"; skCtx.textAlign = "center"; skCtx.fillText("TOCA PARA PATINAR", skCanvas.width/2, skCanvas.height/2);
-        window.addEventListener('keydown', (e) => { if(e.code==='Space') { e.preventDefault(); skJump(); } });
-        skCanvas.addEventListener('mousedown', skJump); skCanvas.addEventListener('touchstart', (e) => { e.preventDefault(); skJump(); }, {passive:false});
-
-
-        // --- 8. JUEGO 7: SAFE CRACKER ---
-        const scCanvas = document.getElementById("safeCanvas");
-        const scCtx = scCanvas.getContext("2d");
-        let scIsPlaying = false, scIsGameOver = false, scLevel = 0, scAngle = 0, scSpeed = 0.05, scTargetAngle = 0, scTargetWidth = 0.4;
-        let scHighScore = localStorage.getItem('gtaSafeHighScore') || 0; document.getElementById('scHighScore').innerText = scHighScore;
-
-        function initSafe() { scLevel = 0; scSpeed = 0.05; scIsGameOver = false; scIsPlaying = true; document.getElementById('scScore').innerText = scLevel; resetSafeLevel(); requestAnimationFrame(updateSafe); }
-        function resetSafeLevel() { scTargetAngle = Math.random() * Math.PI * 2; scAngle = 0; scTargetWidth = Math.max(0.1, 0.5 - (scLevel*0.03)); scSpeed = 0.04 + (scLevel*0.005); }
-        
-        function updateSafe() {
-            if (scIsGameOver) return; scCtx.clearRect(0, 0, scCanvas.width, scCanvas.height);
-            let cx = scCanvas.width/2, cy = scCanvas.height/2, r = 100;
-            
-            scCtx.strokeStyle = '#555'; scCtx.lineWidth = 20; scCtx.beginPath(); scCtx.arc(cx, cy, r, 0, Math.PI*2); scCtx.stroke();
-            scCtx.strokeStyle = '#00f3ff'; scCtx.lineWidth = 20; scCtx.shadowBlur = 15; scCtx.shadowColor = '#00f3ff';
-            scCtx.beginPath(); scCtx.arc(cx, cy, r, scTargetAngle - scTargetWidth, scTargetAngle + scTargetWidth); scCtx.stroke(); scCtx.shadowBlur = 0;
-            
-            scAngle += scSpeed; if (scAngle > Math.PI*2) scAngle -= Math.PI*2;
-            let nx = cx + Math.cos(scAngle)*(r-10), ny = cy + Math.sin(scAngle)*(r-10);
-            scCtx.strokeStyle = '#ff3366'; scCtx.lineWidth = 5; scCtx.beginPath(); scCtx.moveTo(cx, cy); scCtx.lineTo(nx, ny); scCtx.stroke();
-            scCtx.fillStyle = '#222'; scCtx.beginPath(); scCtx.arc(cx, cy, 20, 0, Math.PI*2); scCtx.fill();
-            
-            requestAnimationFrame(updateSafe);
-        }
-        
-        function handleSafeClick(e) {
-            if (!scIsPlaying || scIsGameOver) { initSafe(); return; }
-            let dist = Math.abs(scAngle - scTargetAngle);
-            if (dist > Math.PI) dist = Math.PI*2 - dist;
-            if (dist <= scTargetWidth) {
-                scLevel++; document.getElementById('scScore').innerText = scLevel; resetSafeLevel();
-            } else {
-                scIsGameOver = true; scIsPlaying = false;
-                if (scLevel > scHighScore) { scHighScore = scLevel; localStorage.setItem('gtaSafeHighScore', scHighScore); document.getElementById('scHighScore').innerText = scHighScore; }
-                scCtx.fillStyle = "rgba(0,0,0,0.8)"; scCtx.fillRect(0,0, scCanvas.width, scCanvas.height);
-                scCtx.fillStyle = "#ff0000"; scCtx.font = "40px Pricedown, sans-serif"; scCtx.textAlign = "center"; scCtx.fillText("BUSTED", scCanvas.width/2, scCanvas.height/2);
-            }
-        }
-        scCtx.fillStyle = "#fff"; scCtx.font = "26px Pricedown, sans-serif"; scCtx.textAlign = "center"; scCtx.fillText("TOCA PARA ROBAR", scCanvas.width/2, scCanvas.height/2 + 10);
-        scCanvas.addEventListener('mousedown', handleSafeClick); scCanvas.addEventListener('touchstart', (e) => { e.preventDefault(); handleSafeClick(e); }, {passive:false});
     </script>
 </body>
 </html>
