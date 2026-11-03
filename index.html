@@ -168,18 +168,11 @@
             max-width: 800px;
             display: block;
             margin: 0 auto;
-            cursor: crosshair;
         }
 
-        #runnerCanvas {
-            background: linear-gradient(to bottom, #130a2a, #ff6633);
-            height: 250px;
-        }
-
-        #shooterCanvas {
-            background: #1a1a24; /* Asfalto oscuro */
-            height: 350px;
-        }
+        #runnerCanvas { background: linear-gradient(to bottom, #130a2a, #ff6633); height: 250px; cursor: pointer; }
+        #shooterCanvas { background: #1a1a24; height: 350px; cursor: crosshair; }
+        #highwayCanvas { background: #111; height: 350px; cursor: pointer; }
 
         .game-instructions {
             font-size: 0.8rem;
@@ -237,7 +230,7 @@
             </div>
         </div>
 
-        <!-- JUEGO 1: Vice City Getaway (Runner Realista) -->
+        <!-- JUEGO 1: Vice City Getaway (Runner Realista Lateral) -->
         <div class="game-section">
             <div class="game-header">
                 <div class="game-title">Vice City Getaway</div>
@@ -255,6 +248,16 @@
             </div>
             <canvas id="shooterCanvas" width="800" height="350"></canvas>
             <div class="game-instructions">WASD para moverte | CLIC o Toca para Disparar a la policía</div>
+        </div>
+        
+        <!-- JUEGO 3: Vice City Highway (Top-Down Esquivar Tráfico) -->
+        <div class="game-section">
+            <div class="game-header">
+                <div class="game-title">Vice City Highway</div>
+                <div class="game-score">DISTANCIA: <span id="hScore">0</span> | MÁX: <span id="hHighScore">0</span></div>
+            </div>
+            <canvas id="highwayCanvas" width="800" height="350"></canvas>
+            <div class="game-instructions">A y D o Flechas IZQ/DER para esquivar | Toca los lados de la pantalla</div>
         </div>
 
         <!-- Vídeos -->
@@ -308,7 +311,7 @@
         updateCountdown();
 
         // ==========================================================
-        // --- 2. LÓGICA DEL MINIJUEGO 1: RUNNER REALISTA COCHE ---
+        // --- 2. MINIJUEGO 1: RUNNER LATERAL ---
         // ==========================================================
         const rCanvas = document.getElementById("runnerCanvas");
         const rCtx = rCanvas.getContext("2d");
@@ -377,7 +380,7 @@
             rCtx.fillStyle = 'rgba(0, 243, 255, 0.7)'; rCtx.beginPath(); rCtx.moveTo(20,6); rCtx.lineTo(43,4); rCtx.lineTo(60,10); rCtx.lineTo(43,11); rCtx.lineTo(20,11); rCtx.closePath(); rCtx.fill();
             rCtx.restore();
 
-            // Obstáculos y Colisiones
+            // Obstáculos
             for (let i = 0; i < rObstacles.length; i++) {
                 let obs = rObstacles[i]; obs.x -= rGameSpeed;
                 rCtx.save(); rCtx.translate(obs.x, obs.y);
@@ -413,7 +416,7 @@
 
 
         // ==========================================================
-        // --- 3. LÓGICA DEL MINIJUEGO 2: SHOOTER TOP-DOWN ---
+        // --- 3. MINIJUEGO 2: SHOOTER TOP-DOWN ---
         // ==========================================================
         const sCanvas = document.getElementById("shooterCanvas");
         const sCtx = sCanvas.getContext("2d");
@@ -441,48 +444,36 @@
 
         function sShoot() {
             if (!sIsPlaying || sIsGameOver) { initShooter(); return; }
-            // Flash de disparo y sonido visual
             sBullets.push({
-                x: sPlayer.x + Math.cos(sPlayer.angle) * 20,
-                y: sPlayer.y + Math.sin(sPlayer.angle) * 20,
-                vx: Math.cos(sPlayer.angle) * 12,
-                vy: Math.sin(sPlayer.angle) * 12
+                x: sPlayer.x + Math.cos(sPlayer.angle) * 20, y: sPlayer.y + Math.sin(sPlayer.angle) * 20,
+                vx: Math.cos(sPlayer.angle) * 12, vy: Math.sin(sPlayer.angle) * 12
             });
         }
 
         function updateShooter() {
             if (sIsGameOver) return;
-            sTick++;
-            sCtx.clearRect(0, 0, sCanvas.width, sCanvas.height);
+            sTick++; sCtx.clearRect(0, 0, sCanvas.width, sCanvas.height);
 
-            // Dibujar Asfalto y Marcas
             sCtx.fillStyle = '#1a1a24'; sCtx.fillRect(0, 0, sCanvas.width, sCanvas.height);
-            sCtx.strokeStyle = 'rgba(255, 204, 0, 0.3)'; sCtx.lineWidth = 4;
-            sCtx.setLineDash([20, 20]);
+            sCtx.strokeStyle = 'rgba(255, 204, 0, 0.3)'; sCtx.lineWidth = 4; sCtx.setLineDash([20, 20]);
             sCtx.beginPath(); sCtx.moveTo(0, sCanvas.height/2); sCtx.lineTo(sCanvas.width, sCanvas.height/2); sCtx.stroke();
-            sCtx.setLineDash([]); // Reset
+            sCtx.setLineDash([]); 
 
-            // Dibujar Sangre (Permanente)
             for (let b of sBlood) {
                 sCtx.fillStyle = `rgba(180, 0, 0, ${b.a})`;
                 sCtx.beginPath(); sCtx.arc(b.x, b.y, b.r, 0, Math.PI*2); sCtx.fill();
             }
 
-            // Movimiento del Jugador
             let dx = 0, dy = 0;
             if (keys.w || keys.ArrowUp) dy -= sPlayer.speed;
             if (keys.s || keys.ArrowDown) dy += sPlayer.speed;
             if (keys.a || keys.ArrowLeft) dx -= sPlayer.speed;
             if (keys.d || keys.ArrowRight) dx += sPlayer.speed;
             
-            // Limitar bordes
             sPlayer.x = Math.max(15, Math.min(sCanvas.width - 15, sPlayer.x + dx));
             sPlayer.y = Math.max(15, Math.min(sCanvas.height - 15, sPlayer.y + dy));
-            
-            // Rotar hacia ratón
             sPlayer.angle = Math.atan2(mouseY - sPlayer.y, mouseX - sPlayer.x);
 
-            // Generar Policías
             if (sTick % Math.max(20, 80 - Math.floor(sScore/2)) === 0) {
                 let side = Math.floor(Math.random() * 4);
                 let cx, cy;
@@ -493,64 +484,52 @@
                 sCops.push({ x: cx, y: cy, speed: 1.5 + (sScore*0.02), radius: 12 });
             }
 
-            // Actualizar Balas
             for (let i = sBullets.length - 1; i >= 0; i--) {
                 let b = sBullets[i];
                 b.x += b.vx; b.y += b.vy;
-                
-                // Dibujar Bala (Trazo amarillo/naranja)
                 sCtx.strokeStyle = '#ffcc00'; sCtx.lineWidth = 3;
                 sCtx.beginPath(); sCtx.moveTo(b.x, b.y); sCtx.lineTo(b.x - b.vx, b.y - b.vy); sCtx.stroke();
 
-                // Eliminar fuera
                 if (b.x < 0 || b.x > sCanvas.width || b.y < 0 || b.y > sCanvas.height) { sBullets.splice(i, 1); continue; }
 
-                // Colisión Bala vs Policía
                 for (let j = sCops.length - 1; j >= 0; j--) {
                     let cop = sCops[j];
                     if (Math.hypot(b.x - cop.x, b.y - cop.y) < cop.radius + 5) {
                         sBlood.push({ x: cop.x, y: cop.y, r: Math.random()*10+10, a: 0.8 });
-                        sCops.splice(j, 1);
-                        sBullets.splice(i, 1);
-                        sScore++;
+                        sCops.splice(j, 1); sBullets.splice(i, 1); sScore++;
                         document.getElementById('sScore').innerText = sScore;
                         break;
                     }
                 }
             }
 
-            // Actualizar y Dibujar Policías
             for (let i = sCops.length - 1; i >= 0; i--) {
                 let cop = sCops[i];
                 let angle = Math.atan2(sPlayer.y - cop.y, sPlayer.x - cop.x);
-                cop.x += Math.cos(angle) * cop.speed;
-                cop.y += Math.sin(angle) * cop.speed;
+                cop.x += Math.cos(angle) * cop.speed; cop.y += Math.sin(angle) * cop.speed;
 
-                // Colisión Cop vs Player (WASTED)
                 if (Math.hypot(sPlayer.x - cop.x, sPlayer.y - cop.y) < sPlayer.radius + cop.radius) {
                     sIsGameOver = true; sIsPlaying = false;
                     if (sScore > sHighScore) { sHighScore = sScore; localStorage.setItem('gtaShooterHighScore', sHighScore); document.getElementById('sHighScore').innerText = sHighScore; }
                 }
 
-                // Dibujar Cop Realista Top-Down
                 sCtx.save(); sCtx.translate(cop.x, cop.y); sCtx.rotate(angle);
-                sCtx.fillStyle = '#0a1930'; sCtx.beginPath(); sCtx.ellipse(0, 0, 10, 16, 0, 0, Math.PI*2); sCtx.fill(); // Cuerpo
-                sCtx.fillStyle = '#f1c27d'; sCtx.beginPath(); sCtx.arc(10, -10, 4, 0, Math.PI*2); sCtx.fill(); // Brazos corriendo
-                sCtx.fillStyle = '#f1c27d'; sCtx.beginPath(); sCtx.arc(10, 10, 4, 0, Math.PI*2); sCtx.fill();
-                sCtx.fillStyle = '#f1c27d'; sCtx.beginPath(); sCtx.arc(0, 0, 8, 0, Math.PI*2); sCtx.fill(); // Cabeza
-                sCtx.fillStyle = '#0a1930'; sCtx.beginPath(); sCtx.arc(-2, 0, 8, 0, Math.PI*2); sCtx.fill(); // Gorra
-                sCtx.fillStyle = '#111'; sCtx.beginPath(); sCtx.arc(4, 0, 6, -Math.PI/3, Math.PI/3); sCtx.fill(); // Visera
+                sCtx.fillStyle = '#0a1930'; sCtx.beginPath(); sCtx.ellipse(0, 0, 10, 16, 0, 0, Math.PI*2); sCtx.fill();
+                sCtx.fillStyle = '#f1c27d'; sCtx.beginPath(); sCtx.arc(10, -10, 4, 0, Math.PI*2); sCtx.fill();
+                sCtx.beginPath(); sCtx.arc(10, 10, 4, 0, Math.PI*2); sCtx.fill();
+                sCtx.beginPath(); sCtx.arc(0, 0, 8, 0, Math.PI*2); sCtx.fill();
+                sCtx.fillStyle = '#0a1930'; sCtx.beginPath(); sCtx.arc(-2, 0, 8, 0, Math.PI*2); sCtx.fill();
+                sCtx.fillStyle = '#111'; sCtx.beginPath(); sCtx.arc(4, 0, 6, -Math.PI/3, Math.PI/3); sCtx.fill();
                 sCtx.restore();
             }
 
-            // Dibujar Jugador Realista Top-Down
             sCtx.save(); sCtx.translate(sPlayer.x, sPlayer.y); sCtx.rotate(sPlayer.angle);
-            sCtx.fillStyle = '#ff3366'; sCtx.beginPath(); sCtx.ellipse(0, 0, 12, 18, 0, 0, Math.PI*2); sCtx.fill(); // Camisa Rosa
-            sCtx.fillStyle = '#f1c27d'; sCtx.beginPath(); sCtx.arc(15, -9, 4, 0, Math.PI*2); sCtx.fill(); // Brazo der
-            sCtx.beginPath(); sCtx.arc(15, 9, 4, 0, Math.PI*2); sCtx.fill(); // Brazo izq
-            sCtx.fillStyle = '#222'; sCtx.fillRect(15, -11, 15, 4); // Arma (Pistola) apuntando recta
-            sCtx.fillStyle = '#f1c27d'; sCtx.beginPath(); sCtx.arc(0, 0, 9, 0, Math.PI*2); sCtx.fill(); // Cabeza
-            sCtx.fillStyle = '#4a2511'; sCtx.beginPath(); sCtx.arc(-2, 0, 9, -Math.PI/2, Math.PI/2, true); sCtx.fill(); // Pelo
+            sCtx.fillStyle = '#ff3366'; sCtx.beginPath(); sCtx.ellipse(0, 0, 12, 18, 0, 0, Math.PI*2); sCtx.fill();
+            sCtx.fillStyle = '#f1c27d'; sCtx.beginPath(); sCtx.arc(15, -9, 4, 0, Math.PI*2); sCtx.fill();
+            sCtx.beginPath(); sCtx.arc(15, 9, 4, 0, Math.PI*2); sCtx.fill();
+            sCtx.fillStyle = '#222'; sCtx.fillRect(15, -11, 15, 4);
+            sCtx.fillStyle = '#f1c27d'; sCtx.beginPath(); sCtx.arc(0, 0, 9, 0, Math.PI*2); sCtx.fill();
+            sCtx.fillStyle = '#4a2511'; sCtx.beginPath(); sCtx.arc(-2, 0, 9, -Math.PI/2, Math.PI/2, true); sCtx.fill();
             sCtx.restore();
 
             if (sIsGameOver) {
@@ -567,13 +546,11 @@
         sCtx.fillStyle = "#fff"; sCtx.font = "26px Pricedown, sans-serif"; sCtx.textAlign = "center";
         sCtx.fillText("TOCA PARA EMPEZAR A DISPARAR", sCanvas.width/2, sCanvas.height/2 + 10);
 
-        // Eventos del Shooter
         window.addEventListener('keydown', (e) => { if (keys.hasOwnProperty(e.code)) keys[e.code] = true; });
         window.addEventListener('keyup', (e) => { if (keys.hasOwnProperty(e.code)) keys[e.code] = false; });
         
         function updateMousePos(e) {
             const rect = sCanvas.getBoundingClientRect();
-            // Soporte táctil y de ratón
             let clientX = e.touches ? e.touches[0].clientX : e.clientX;
             let clientY = e.touches ? e.touches[0].clientY : e.clientY;
             mouseX = (clientX - rect.left) * (sCanvas.width / rect.width);
@@ -582,10 +559,219 @@
 
         sCanvas.addEventListener('mousemove', updateMousePos);
         sCanvas.addEventListener('mousedown', (e) => { updateMousePos(e); sShoot(); });
-        
-        // Controles Móviles para disparar
         sCanvas.addEventListener('touchmove', (e) => { e.preventDefault(); updateMousePos(e); }, {passive: false});
         sCanvas.addEventListener('touchstart', (e) => { e.preventDefault(); updateMousePos(e); sShoot(); }, {passive: false});
+
+
+        // ==========================================================
+        // --- 4. MINIJUEGO 3: HIGHWAY GETAWAY (Coches Top-Down) ---
+        // ==========================================================
+        const hCanvas = document.getElementById("highwayCanvas");
+        const hCtx = hCanvas.getContext("2d");
+        
+        let hIsPlaying = false, hIsGameOver = false;
+        let hScore = 0, hTick = 0, hRoadOffset = 0;
+        let hHighScore = localStorage.getItem('gtaHighwayHighScore') || 0;
+        document.getElementById('hHighScore').innerText = hHighScore;
+
+        let hSpeed = 8; // Velocidad de la carretera
+        let hPlayer = { x: 400, y: 260, width: 36, height: 70, speed: 6 };
+        let hTraffic = [];
+        
+        const hKeys = { a: false, d: false, ArrowLeft: false, ArrowRight: false };
+
+        function initHighway() {
+            hTraffic = []; hScore = 0; hTick = 0; hRoadOffset = 0; hSpeed = 8;
+            hPlayer.x = 400; hIsGameOver = false; hIsPlaying = true;
+            document.getElementById('hScore').innerText = hScore;
+            requestAnimationFrame(updateHighway);
+        }
+
+        // Función para dibujar los coches (Jugador y Tráfico)
+        function drawCarTopDown(ctx, x, y, w, h, bodyColor, isPlayer) {
+            ctx.save();
+            ctx.translate(x, y);
+            
+            // Sombra
+            ctx.fillStyle = 'rgba(0,0,0,0.5)';
+            ctx.fillRect(5, 5, w, h);
+            
+            // Chasis
+            ctx.fillStyle = bodyColor;
+            ctx.fillRect(0, 0, w, h);
+            
+            // Techo / Cristales tintados
+            ctx.fillStyle = '#111';
+            ctx.fillRect(4, 15, w-8, h-30);
+            
+            // Reflejo en luna delantera y trasera
+            ctx.fillStyle = 'rgba(0, 243, 255, 0.3)';
+            ctx.fillRect(4, 15, w-8, 12);
+            ctx.fillRect(4, h-27, w-8, 12);
+
+            // Luces
+            if (isPlayer) {
+                // Faros iluminando
+                ctx.fillStyle = '#ffffff';
+                ctx.shadowBlur = 15; ctx.shadowColor = '#ffffff';
+                ctx.fillRect(3, -2, 8, 4);
+                ctx.fillRect(w-11, -2, 8, 4);
+                // Luces de freno
+                ctx.fillStyle = '#ff0000';
+                ctx.shadowBlur = 15; ctx.shadowColor = '#ff0000';
+                ctx.fillRect(3, h-2, 8, 4);
+                ctx.fillRect(w-11, h-2, 8, 4);
+            } else {
+                // Tráfico frenando levemente
+                ctx.fillStyle = '#cc0000';
+                ctx.shadowBlur = 5; ctx.shadowColor = '#cc0000';
+                ctx.fillRect(3, h-2, 8, 4);
+                ctx.fillRect(w-11, h-2, 8, 4);
+            }
+            ctx.restore();
+        }
+
+        function updateHighway() {
+            if (hIsGameOver) return;
+            hTick++; hCtx.clearRect(0, 0, hCanvas.width, hCanvas.height);
+
+            // Dibujar Entorno (Autopista)
+            // Arcenes / Laterales oscuros
+            hCtx.fillStyle = '#080808'; 
+            hCtx.fillRect(0, 0, 150, hCanvas.height);
+            hCtx.fillRect(650, 0, 150, hCanvas.height);
+            
+            // Asfalto
+            hCtx.fillStyle = '#1a1a24';
+            hCtx.fillRect(150, 0, 500, hCanvas.height);
+
+            // Líneas continuas amarillas (bordes)
+            hCtx.strokeStyle = '#ffcc00'; hCtx.lineWidth = 4;
+            hCtx.beginPath(); hCtx.moveTo(152, 0); hCtx.lineTo(152, hCanvas.height); hCtx.stroke();
+            hCtx.beginPath(); hCtx.moveTo(648, 0); hCtx.lineTo(648, hCanvas.height); hCtx.stroke();
+
+            // Líneas discontinuas blancas (carriles)
+            hRoadOffset += hSpeed;
+            if (hRoadOffset >= 60) hRoadOffset = 0;
+            
+            hCtx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+            for (let i = -60; i < hCanvas.height; i += 60) {
+                // 4 carriles = 3 separadores (en x: 275, 400, 525)
+                hCtx.fillRect(273, i + hRoadOffset, 4, 30);
+                hCtx.fillRect(398, i + hRoadOffset, 4, 30);
+                hCtx.fillRect(523, i + hRoadOffset, 4, 30);
+            }
+
+            // Movimiento del Jugador
+            if (hKeys.a || hKeys.ArrowLeft) hPlayer.x -= hPlayer.speed;
+            if (hKeys.d || hKeys.ArrowRight) hPlayer.x += hPlayer.speed;
+            
+            // Limitar coche a la carretera
+            hPlayer.x = Math.max(160, Math.min(640 - hPlayer.width, hPlayer.x));
+
+            // Dibujar Jugador (Deportivo Rosa con gradiente)
+            let pGrad = hCtx.createLinearGradient(hPlayer.x, hPlayer.y, hPlayer.x, hPlayer.y+hPlayer.height);
+            pGrad.addColorStop(0, '#ff3366'); pGrad.addColorStop(1, '#990033');
+            drawCarTopDown(hCtx, hPlayer.x, hPlayer.y, hPlayer.width, hPlayer.height, pGrad, true);
+
+            // Generar Tráfico
+            let spawnRate = Math.max(15, 60 - Math.floor(hScore/50)); // Más tráfico según avanzas
+            if (hTick % spawnRate === 0) {
+                // Escoger un carril aleatorio (1 a 4) aprox
+                let lanes = [190, 315, 440, 565];
+                let laneX = lanes[Math.floor(Math.random() * lanes.length)];
+                let carColors = ['#ffffff', '#222222', '#0055ff', '#ffaa00', '#009933'];
+                let cColor = carColors[Math.floor(Math.random() * carColors.length)];
+                
+                // Variar el tamaño para que parezcan coches y camionetas
+                let isTruck = Math.random() > 0.8;
+                let cWidth = isTruck ? 40 : 36;
+                let cHeight = isTruck ? 90 : 70;
+                
+                hTraffic.push({ 
+                    x: laneX + (Math.random() * 10 - 5), // Pequeña variación dentro del carril
+                    y: -100, 
+                    width: cWidth, 
+                    height: cHeight, 
+                    speed: Math.random() * 3 + 2, // Van más lentos que la carretera
+                    color: cColor 
+                });
+            }
+
+            // Actualizar y dibujar Tráfico
+            for (let i = hTraffic.length - 1; i >= 0; i--) {
+                let t = hTraffic[i];
+                // Los coches se mueven "hacia abajo" porque tú vas más rápido que ellos
+                t.y += (hSpeed - t.speed); 
+                
+                drawCarTopDown(hCtx, t.x, t.y, t.width, t.height, t.color, false);
+
+                // Colisión (Caja de colisión estricta)
+                let margin = 4;
+                if (hPlayer.x + margin < t.x + t.width - margin &&
+                    hPlayer.x + hPlayer.width - margin > t.x + margin &&
+                    hPlayer.y + margin < t.y + t.height - margin &&
+                    hPlayer.y + hPlayer.height - margin > t.y + margin) {
+                    
+                    hIsGameOver = true; hIsPlaying = false;
+                    let final = Math.floor(hScore/10);
+                    if (final > hHighScore) { hHighScore = final; localStorage.setItem('gtaHighwayHighScore', hHighScore); document.getElementById('hHighScore').innerText = hHighScore; }
+                    
+                    hCtx.fillStyle = "rgba(0,0,0,0.8)"; hCtx.fillRect(0,0, hCanvas.width, hCanvas.height);
+                    hCtx.fillStyle = "#ff0000"; hCtx.font = "40px Pricedown, sans-serif"; hCtx.textAlign = "center";
+                    hCtx.shadowBlur = 20; hCtx.shadowColor = '#ff0000'; hCtx.fillText("WASTED", hCanvas.width/2, hCanvas.height/2);
+                    hCtx.shadowBlur = 0; hCtx.fillStyle = "#fff"; hCtx.font = "14px Montserrat, sans-serif";
+                    hCtx.fillText("Te has estrellado. Toca para reiniciar", hCanvas.width/2, hCanvas.height/2 + 40);
+                }
+
+                // Borrar si salen de la pantalla por abajo
+                if (t.y > hCanvas.height + 20) {
+                    hTraffic.splice(i, 1);
+                }
+            }
+
+            // Puntuación
+            hScore++; 
+            if (hScore % 200 === 0) hSpeed += 0.5; // Acelerar el juego
+            if (hScore % 10 === 0) document.getElementById('hScore').innerText = Math.floor(hScore/10);
+            
+            if (!hIsGameOver) {
+                requestAnimationFrame(updateHighway);
+            }
+        }
+
+        // Pantalla inicial de Highway
+        hCtx.fillStyle = "#fff"; hCtx.font = "26px Pricedown, sans-serif"; hCtx.textAlign = "center";
+        hCtx.fillText("TOCA PARA EMPEZAR A CONDUCIR", hCanvas.width/2, hCanvas.height/2 + 10);
+
+        // Controles de Teclado
+        window.addEventListener('keydown', (e) => { if (hKeys.hasOwnProperty(e.code)) hKeys[e.code] = true; });
+        window.addEventListener('keyup', (e) => { if (hKeys.hasOwnProperty(e.code)) hKeys[e.code] = false; });
+        window.addEventListener('keydown', (e) => { if(e.key==='a' || e.key==='A') hKeys.a = true; if(e.key==='d' || e.key==='D') hKeys.d = true; });
+        window.addEventListener('keyup', (e) => { if(e.key==='a' || e.key==='A') hKeys.a = false; if(e.key==='d' || e.key==='D') hKeys.d = false; });
+        
+        // Controles Táctiles y de Ratón
+        function handleHighwayTouch(e) {
+            if (!hIsPlaying || hIsGameOver) { initHighway(); return; }
+            const rect = hCanvas.getBoundingClientRect();
+            let clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            let x = clientX - rect.left;
+            
+            // Tocar lado izquierdo gira a la izquierda, derecho a la derecha
+            if (x < rect.width / 2) { hKeys.a = true; hKeys.d = false; }
+            else { hKeys.d = true; hKeys.a = false; }
+        }
+
+        function releaseHighwayTouch() {
+            hKeys.a = false; hKeys.d = false;
+        }
+
+        hCanvas.addEventListener('mousedown', handleHighwayTouch);
+        hCanvas.addEventListener('mouseup', releaseHighwayTouch);
+        hCanvas.addEventListener('mouseleave', releaseHighwayTouch);
+        hCanvas.addEventListener('touchstart', (e) => { e.preventDefault(); handleHighwayTouch(e); }, {passive: false});
+        hCanvas.addEventListener('touchend', (e) => { e.preventDefault(); releaseHighwayTouch(); }, {passive: false});
+
     </script>
 </body>
 </html>
