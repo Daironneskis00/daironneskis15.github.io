@@ -162,7 +162,7 @@
         }
 
         #gameCanvas {
-            background: rgba(0, 0, 0, 0.6);
+            background: linear-gradient(to bottom, rgba(7, 1, 18, 0.8), rgba(30, 5, 50, 0.9));
             border: 2px solid rgba(0, 243, 255, 0.3);
             border-radius: 8px;
             width: 100%;
@@ -229,14 +229,14 @@
             </div>
         </div>
 
-        <!-- Minijuego Vice City Runner (Caimán vs Pinchos) -->
+        <!-- Minijuego Vice City Runner -->
         <div class="game-section">
             <div class="game-header">
-                <div class="game-title">Leonida Runner</div>
+                <div class="game-title">Leonida Runner <span>(Synthwave Edition)</span></div>
                 <div class="game-score">PUNTUACIÓN: <span id="score">0</span> | MÁX: <span id="highScore">0</span></div>
             </div>
             <canvas id="gameCanvas" width="800" height="200"></canvas>
-            <div class="game-instructions">Toca la pantalla, Espacio o Flecha Arriba para saltar los pinchos</div>
+            <div class="game-instructions">Toca la pantalla, Espacio o Flecha Arriba para saltar los cristales</div>
         </div>
 
         <!-- Vídeos -->
@@ -266,7 +266,7 @@
     </footer>
 
     <script>
-        // LÓGICA DE LA CUENTA ATRÁS
+        // --- LÓGICA DE LA CUENTA ATRÁS ---
         const targetDate = new Date("November 18, 2026 12:00:00 UTC").getTime();
         const timerInterval = setInterval(updateCountdown, 1000);
 
@@ -289,7 +289,7 @@
         }
         updateCountdown();
 
-        // LÓGICA DEL MINIJUEGO
+        // --- LÓGICA DEL MINIJUEGO CON GRÁFICOS MEJORADOS ---
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
         
@@ -297,17 +297,18 @@
         let isPlaying = false;
         let isGameOver = false;
         let score = 0;
+        let tick = 0; // Para animaciones
+        let bgOffset = 0; // Para el efecto de velocidad del fondo
+        
         let highScore = localStorage.getItem('gtaHighScore') || 0;
         document.getElementById('highScore').innerText = highScore;
 
-        // Variables del juego
         let gameSpeed = 5;
         let gravity = 0.6;
         
         const player = {
-            x: 50, y: 150, width: 35, height: 35, // Ajustado al tamaño del emoji
-            dy: 0, jumpForce: -11.5, grounded: false,
-            color: '#ff3366' // neon pink glow
+            x: 50, y: 135, width: 35, height: 45, 
+            dy: 0, jumpForce: -11.5, grounded: false
         };
         
         let obstacles = [];
@@ -315,8 +316,10 @@
         function initGame() {
             obstacles = [];
             score = 0;
-            gameSpeed = 5;
-            player.y = 150;
+            tick = 0;
+            bgOffset = 0;
+            gameSpeed = 5.5;
+            player.y = 135;
             player.dy = 0;
             isGameOver = false;
             isPlaying = true;
@@ -326,46 +329,122 @@
         }
 
         function spawnObstacle() {
-            let size = Math.random() * 15 + 25; // Altura del pincho
+            let size = Math.random() * 15 + 30; // Altura del cristal
             obstacles.push({
                 x: canvas.width,
                 y: 180 - size,
-                width: 25, // Base del pincho
-                height: size,
-                color: '#00f3ff' // neon cyan
+                width: 25, 
+                height: size
             });
         }
 
         function jump() {
-            if (!isPlaying && !isGameOver) {
-                initGame();
-                return;
-            }
-            if (isGameOver) {
-                initGame();
-                return;
-            }
+            if (!isPlaying && !isGameOver) { initGame(); return; }
+            if (isGameOver) { initGame(); return; }
             if (player.grounded) {
                 player.dy = player.jumpForce;
                 player.grounded = false;
             }
         }
 
-        function updateGame() {
-            if (isGameOver) return;
+        // Función para dibujar al Caimán Humanoide
+        function drawGator(ctx, x, y, isJumping, tick) {
+            ctx.save();
+            ctx.translate(x, y);
 
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const skin = '#00ff66';   // Verde neón
+            const shirt = '#ff3366';  // Camisa rosa Vice City
+            const shades = '#070112'; // Gafas oscuras
 
-            // Suelo Neón
+            // Cola
+            ctx.fillStyle = skin;
+            ctx.beginPath();
+            ctx.moveTo(8, 30);
+            ctx.lineTo(-12, 38);
+            ctx.lineTo(8, 22);
+            ctx.fill();
+
+            // Piernas animadas al correr
+            let leg1 = isJumping ? -5 : Math.sin(tick * 0.4) * 8;
+            let leg2 = isJumping ? -2 : Math.sin(tick * 0.4 + Math.PI) * 8;
+            ctx.fillStyle = skin;
+            ctx.fillRect(10 + leg1, 30, 6, 15);  // Pierna trasera
+            ctx.fillRect(20 + leg2, 30, 6, 15);  // Pierna delantera
+
+            // Torso (Camisa)
+            ctx.fillStyle = shirt;
+            ctx.fillRect(10, 10, 18, 22);
+
+            // Cabeza y hocico
+            ctx.fillStyle = skin;
+            ctx.fillRect(12, -10, 16, 20); // Base cabeza
+            ctx.fillRect(28, -2, 16, 10);  // Hocico mirando a la derecha
+
+            // Gafas de sol (Estilo Thug Life / GTA)
+            ctx.fillStyle = shades;
+            ctx.fillRect(20, -6, 14, 6); 
+            ctx.fillStyle = '#00f3ff'; // Reflejo cian en el cristal
+            ctx.fillRect(22, -5, 4, 2);
+
+            // Brazo (Moviéndose en dirección contraria a las piernas)
+            let arm = isJumping ? -8 : Math.sin(tick * 0.4 + Math.PI) * 6;
+            ctx.fillStyle = skin;
+            ctx.fillRect(16 + arm, 14, 6, 14);
+
+            ctx.restore();
+        }
+
+        // Función para dibujar el fondo estilo Synthwave
+        function drawBackground() {
+            // Sol Synthwave
+            let sunX = canvas.width / 2;
+            let sunY = 130;
+            let sunRadius = 60;
+            let sunGrad = ctx.createLinearGradient(0, sunY - sunRadius, 0, sunY + sunRadius);
+            sunGrad.addColorStop(0, "#ff3366");
+            sunGrad.addColorStop(1, "#ffe359");
+            ctx.fillStyle = sunGrad;
+            ctx.beginPath();
+            ctx.arc(sunX, sunY, sunRadius, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Líneas horizontales cortando el sol (efecto retro)
+            ctx.fillStyle = "rgba(7, 1, 18, 0.8)";
+            for(let i = 0; i < 5; i++) {
+                ctx.fillRect(sunX - sunRadius, sunY + (i * 12), sunRadius * 2, 4);
+            }
+
+            // Suelo con efecto de velocidad (Grid Lines)
+            ctx.strokeStyle = "rgba(255, 51, 102, 0.4)";
+            ctx.lineWidth = 2;
+            
+            // Línea horizontal principal del suelo
             ctx.beginPath();
             ctx.moveTo(0, 180);
             ctx.lineTo(canvas.width, 180);
-            ctx.strokeStyle = '#ff3366';
-            ctx.lineWidth = 2;
-            ctx.shadowBlur = 10;
-            ctx.shadowColor = '#ff3366';
             ctx.stroke();
-            ctx.shadowBlur = 0;
+
+            // Pequeñas líneas moviéndose para dar sensación de velocidad
+            bgOffset -= gameSpeed;
+            if (bgOffset <= -40) bgOffset = 0;
+            
+            for(let i = 0; i < canvas.width + 40; i += 40) {
+                let lx = i + bgOffset;
+                ctx.beginPath();
+                ctx.moveTo(lx, 180);
+                ctx.lineTo(lx - 20, 200); // Ángulo de perspectiva
+                ctx.stroke();
+            }
+        }
+
+        function updateGame() {
+            if (isGameOver) return;
+            tick++; // Aumentar tick para la animación
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Dibujar fondo Synthwave
+            drawBackground();
 
             // Físicas del jugador
             player.dy += gravity;
@@ -377,33 +456,28 @@
                 player.grounded = true;
             }
 
-            // Dibujar Caimán
-            ctx.save();
-            ctx.shadowBlur = 15;
-            ctx.shadowColor = player.color;
-            ctx.font = "35px Arial";
-            ctx.textBaseline = "middle";
-            ctx.textAlign = "center";
-            // Trasladar y voltear horizontalmente el canvas temporalmente
-            // (por defecto el emoji mira a la izquierda, así lo hacemos mirar a la derecha)
-            ctx.translate(player.x + player.width / 2, player.y + player.height / 2);
-            ctx.scale(-1, 1); 
-            ctx.fillText("🐊", 0, 0);
-            ctx.restore();
-            ctx.shadowBlur = 0;
+            // Dibujar Caimán Humanoide con un sutil brillo
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = '#00ff66';
+            drawGator(ctx, player.x, player.y, !player.grounded, tick);
+            ctx.shadowBlur = 0; // Reset
 
             // Obstáculos
             for (let i = 0; i < obstacles.length; i++) {
                 let obs = obstacles[i];
                 obs.x -= gameSpeed;
 
-                // Dibujar Pincho (Triángulo)
-                ctx.fillStyle = obs.color;
-                ctx.shadowBlur = 10;
-                ctx.shadowColor = obs.color;
+                // Dibujar obstáculo (Cristal de Neón con Gradiente)
+                let grad = ctx.createLinearGradient(0, obs.y, 0, obs.y + obs.height);
+                grad.addColorStop(0, '#00f3ff'); // Punta cian
+                grad.addColorStop(1, '#9d00ff'); // Base morada
+                
+                ctx.fillStyle = grad;
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = '#00f3ff';
                 
                 ctx.beginPath();
-                ctx.moveTo(obs.x + obs.width / 2, obs.y); // Punta
+                ctx.moveTo(obs.x + obs.width / 2, obs.y); // Punta superior
                 ctx.lineTo(obs.x + obs.width, obs.y + obs.height); // Abajo derecha
                 ctx.lineTo(obs.x, obs.y + obs.height); // Abajo izquierda
                 ctx.closePath();
@@ -411,27 +485,28 @@
                 
                 ctx.shadowBlur = 0;
 
-                // Colisión (Hitbox ajustada para que el triángulo sea justo)
-                let hitMargin = 8;
-                if (player.x + hitMargin < obs.x + obs.width &&
-                    player.x + player.width - hitMargin > obs.x &&
-                    player.y + hitMargin < obs.y + obs.height &&
-                    player.y + player.height - hitMargin > obs.y + hitMargin) {
+                // Colisión (Hitbox adaptado al cuerpo del caimán humanoide)
+                let hitMarginX = 8;
+                let hitMarginY = 10;
+                if (player.x + hitMarginX < obs.x + obs.width &&
+                    player.x + player.width - hitMarginX > obs.x &&
+                    player.y + hitMarginY < obs.y + obs.height &&
+                    player.y + player.height > obs.y + hitMarginY) {
                     gameOver();
                 }
             }
 
-            // Eliminar obstáculos fuera de pantalla y generar nuevos
+            // Eliminar obstáculos que pasaron
             if (obstacles.length > 0 && obstacles[0].x < -50) {
                 obstacles.shift();
             }
 
-            // Generación aleatoria de distancia entre pinchos
-            if (obstacles.length === 0 || canvas.width - obstacles[obstacles.length - 1].x > (Math.random() * 250 + 250)) {
+            // Generar nuevos cristales con distancia aleatoria progresiva
+            if (obstacles.length === 0 || canvas.width - obstacles[obstacles.length - 1].x > (Math.random() * 250 + 300)) {
                 spawnObstacle();
             }
 
-            // Puntuación
+            // Puntuación y aumento de dificultad
             score++;
             if (score % 100 === 0) gameSpeed += 0.2; 
             
@@ -459,20 +534,26 @@
             ctx.fillStyle = "#ff3366";
             ctx.font = "30px Pricedown, sans-serif";
             ctx.textAlign = "center";
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = '#ff3366';
             ctx.fillText("WASTED", canvas.width / 2, canvas.height / 2);
+            ctx.shadowBlur = 0;
             
             ctx.fillStyle = "#fff";
             ctx.font = "14px Montserrat, sans-serif";
             ctx.fillText("Toca para reiniciar", canvas.width / 2, canvas.height / 2 + 30);
         }
 
-        // Pantalla inicial
+        // Pantalla inicial del juego
         ctx.fillStyle = "#00f3ff";
         ctx.font = "24px Pricedown, sans-serif";
         ctx.textAlign = "center";
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = '#00f3ff';
         ctx.fillText("TOCA PARA EMPEZAR", canvas.width / 2, canvas.height / 2 + 10);
+        ctx.shadowBlur = 0;
 
-        // Controles
+        // Controles de salto
         window.addEventListener('keydown', (e) => {
             if (e.code === 'Space' || e.code === 'ArrowUp') {
                 e.preventDefault();
