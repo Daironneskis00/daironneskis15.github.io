@@ -4,9 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GTA VI - Cuenta Atrás Oficial (New Zealand Launch)</title>
-    <!-- Fuentes de Google estilo Vice City -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,700;0,900;1,400&family=Pricedown&display=swap" rel="stylesheet">
+    <!-- Fuentes oficiales y de estilo -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800;900&family=Pricedown&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --neon-pink: #ff3366;
+            --neon-cyan: #00f3ff;
+            --neon-purple: #9d00ff;
+            --bg-dark: #070112;
+            --card-bg: rgba(18, 6, 38, 0.7);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -14,7 +22,7 @@
         }
 
         body {
-            background-color: #0b021d;
+            background-color: var(--bg-dark);
             color: #ffffff;
             font-family: 'Montserrat', sans-serif;
             overflow-x: hidden;
@@ -22,33 +30,33 @@
             position: relative;
         }
 
-        /* Fondo Animado Estilo GTA VI (Gradiente Neón Vice City) */
+        /* Fondo Animado Vice City Dinámico */
         .bg-gradient {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #0b021d 0%, #290b3b 35%, #591653 70%, #ff3366 100%);
+            background: linear-gradient(135deg, #070112 0%, #1f0536 30%, #4a0d4a 65%, #ff3366 100%);
             background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
+            animation: gradientMove 18s ease infinite;
             z-index: -2;
         }
 
-        @keyframes gradientBG {
+        @keyframes gradientMove {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
 
-        /* Efecto de rejilla o scanlines sutil */
-        .overlay-grid {
+        /* Capa de textura sutil CRT / Scanlines */
+        .scanlines {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.3) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
             background-size: 100% 4px, 6px 100%;
             z-index: -1;
             pointer-events: none;
@@ -56,59 +64,77 @@
 
         header {
             text-align: center;
-            padding: 40px 20px 20px;
+            padding: 50px 20px 20px;
         }
 
         .logo-title {
             font-family: 'Pricedown', sans-serif;
-            font-size: 5rem;
-            letter-spacing: 3px;
-            background: linear-gradient(180deg, #fff 20%, #ffc0cb 50%, #ff3366 80%, #990033 100%);
+            font-size: 5.5rem;
+            letter-spacing: 4px;
+            background: linear-gradient(180deg, #ffffff 15%, #ffd1dc 45%, var(--neon-pink) 75%, #700022 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 30px rgba(255, 51, 102, 0.6);
+            filter: drop-shadow(0 0 25px rgba(255, 51, 102, 0.5));
             margin-bottom: 5px;
-            animation: pulseGlow 3s ease-in-out infinite alternate;
+            animation: titleGlow 4s ease-in-out infinite alternate;
         }
 
-        @keyframes pulseGlow {
-            0% { filter: drop-shadow(0 0 10px rgba(255, 51, 102, 0.4)); }
-            100% { filter: drop-shadow(0 0 25px rgba(0, 243, 255, 0.7)); }
+        @keyframes titleGlow {
+            0% { filter: drop-shadow(0 0 15px rgba(255, 51, 102, 0.4)); transform: scale(1); }
+            100% { filter: drop-shadow(0 0 30px rgba(0, 243, 255, 0.7)); transform: scale(1.01); }
         }
 
         .subtitle {
-            font-size: 1.1rem;
-            letter-spacing: 4px;
+            font-size: 1rem;
+            letter-spacing: 5px;
             text-transform: uppercase;
-            color: #00f3ff;
-            font-weight: 700;
-            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+            color: var(--neon-cyan);
+            font-weight: 800;
+            text-shadow: 0 0 12px rgba(0, 243, 255, 0.6);
         }
 
-        /* Contenedor Principal */
         .container {
-            max-width: 1100px;
+            max-width: 1150px;
             margin: 0 auto;
             padding: 20px;
         }
 
-        /* Caja de Cuenta Atrás */
+        /* Tarjeta de Cuenta Atrás Estilo HUD Pro */
         .countdown-card {
-            background: rgba(15, 5, 30, 0.75);
-            border: 2px solid #ff3366;
-            border-radius: 16px;
-            padding: 30px;
-            box-shadow: 0 0 40px rgba(255, 51, 102, 0.3), inset 0 0 20px rgba(0, 243, 255, 0.1);
-            backdrop-filter: blur(10px);
-            margin: 30px auto;
+            background: var(--card-bg);
+            border: 2px solid var(--neon-pink);
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 0 50px rgba(255, 51, 102, 0.3), inset 0 0 25px rgba(0, 243, 255, 0.15);
+            backdrop-filter: blur(12px);
+            margin: 30px auto 50px;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .countdown-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon-cyan));
+            animation: borderScan 6s linear infinite;
+        }
+
+        @keyframes borderScan {
+            0% { left: -100%; }
+            100% { left: 100%; }
         }
 
         .countdown-info {
-            font-size: 0.95rem;
-            color: #ffc0cb;
+            font-size: 1rem;
+            color: #ffc2d1;
             margin-bottom: 25px;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
+            font-weight: 600;
         }
 
         .countdown-grid {
@@ -118,77 +144,97 @@
         }
 
         .time-box {
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid #00f3ff;
-            border-radius: 10px;
-            padding: 20px 10px;
-            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+            background: rgba(3, 1, 10, 0.75);
+            border: 1px solid var(--neon-cyan);
+            border-radius: 12px;
+            padding: 22px 10px;
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .time-box:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 0 25px rgba(0, 243, 255, 0.4);
         }
 
         .time-value {
             font-family: 'Pricedown', sans-serif;
-            font-size: 3.5rem;
+            font-size: 4rem;
             color: #ffffff;
-            text-shadow: 0 0 15px #00f3ff;
+            text-shadow: 0 0 15px var(--neon-cyan);
+            line-height: 1;
         }
 
         .time-label {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #ff3366;
-            margin-top: 5px;
-            font-weight: 700;
+            letter-spacing: 3px;
+            color: var(--neon-pink);
+            margin-top: 8px;
+            font-weight: 800;
         }
 
-        /* Sección de Vídeos / Tráileres */
+        /* Sección de Vídeos */
         .section-title {
             font-family: 'Pricedown', sans-serif;
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             text-align: center;
-            margin: 50px 0 25px;
-            letter-spacing: 2px;
-            color: #fff;
-            text-shadow: 0 0 15px #ff3366;
+            margin: 40px 0 25px;
+            letter-spacing: 3px;
+            color: #ffffff;
+            text-shadow: 0 0 20px var(--neon-pink);
         }
 
         .trailers-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 35px;
             margin-bottom: 60px;
         }
 
         .trailer-card {
-            background: rgba(15, 5, 30, 0.8);
-            border: 1px solid #ff3366;
-            border-radius: 12px;
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 51, 102, 0.5);
+            border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 0 20px rgba(255, 51, 102, 0.2);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
         .trailer-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 0 30px rgba(0, 243, 255, 0.4);
-            border-color: #00f3ff;
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0, 243, 255, 0.35);
+            border-color: var(--neon-cyan);
         }
 
         .trailer-header {
-            padding: 15px 20px;
-            background: linear-gradient(90deg, rgba(255,51,102,0.2), transparent);
+            padding: 18px 22px;
+            background: linear-gradient(90deg, rgba(255,51,102,0.25), rgba(13,4,30,0.8));
             border-bottom: 1px solid rgba(255,51,102,0.3);
-            font-weight: 700;
-            font-size: 1.1rem;
-            letter-spacing: 1px;
-            color: #00f3ff;
+            font-weight: 800;
+            font-size: 1.15rem;
+            letter-spacing: 1.5px;
+            color: var(--neon-cyan);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .trailer-header span {
+            font-size: 0.75rem;
+            background: rgba(0, 243, 255, 0.15);
+            padding: 4px 10px;
+            border-radius: 20px;
+            color: #fff;
+            border: 1px solid var(--neon-cyan);
         }
 
         .video-container {
             position: relative;
             width: 100%;
-            padding-bottom: 56.25%; /* Relación de aspecto 16:9 */
+            padding-bottom: 56.25%;
             height: 0;
+            background: #000;
         }
 
         .video-container iframe {
@@ -202,17 +248,18 @@
 
         footer {
             text-align: center;
-            padding: 30px;
+            padding: 40px;
             font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.5);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.4);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            letter-spacing: 1px;
         }
 
-        /* Responsive para móviles */
+        /* Responsive Mobile */
         @media (max-width: 768px) {
-            .logo-title { font-size: 3.5rem; }
-            .countdown-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-            .time-value { font-size: 2.5rem; }
+            .logo-title { font-size: 3.8rem; }
+            .countdown-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .time-value { font-size: 3rem; }
             .trailers-grid { grid-template-columns: 1fr; }
         }
     </style>
@@ -220,7 +267,7 @@
 <body>
 
     <div class="bg-gradient"></div>
-    <div class="overlay-grid"></div>
+    <div class="scanlines"></div>
 
     <header>
         <h1 class="logo-title">Grand Theft Auto VI</h1>
@@ -231,7 +278,7 @@
         <!-- Bloque de Cuenta Atrás -->
         <div class="countdown-card">
             <div class="countdown-info" id="status-text">
-                ⏰ Tiempo restante para el desbloqueo en Nueva Zelanda (Disponible en España)
+                🌴 TIEMPO RESTANTE PARA EL DESBLOQUEO EN NUEVA ZELANDA (DISPONIBLE EN ESPAÑA) 🌴
             </div>
             <div class="countdown-grid">
                 <div class="time-box">
@@ -257,33 +304,45 @@
         <h2 class="section-title">Archivos Multimedia Oficiales</h2>
         
         <div class="trailers-grid">
-            <!-- Tráiler 1 (Rockstar Games Official) -->
+            <!-- Tráiler 1 -->
             <div class="trailer-card">
-                <div class="trailer-header">Tráiler 1</div>
+                <div class="trailer-header">
+                    Tráiler 1
+                    <span>Official</span>
+                </div>
                 <div class="video-container">
                     <iframe src="https://www.youtube-nocookie.com/embed/QdBZY2fkU-0" allowfullscreen></iframe>
                 </div>
             </div>
 
-            <!-- Tráiler 2 (Rockstar Games Official) -->
+            <!-- Tráiler 2 -->
             <div class="trailer-card">
-                <div class="trailer-header">Tráiler 2</div>
+                <div class="trailer-header">
+                    Tráiler 2
+                    <span>Official</span>
+                </div>
                 <div class="video-container">
                     <iframe src="https://www.youtube-nocookie.com/embed/Ny9U3VKzROI" allowfullscreen></iframe>
                 </div>
             </div>
 
-            <!-- An Extended Look -->
+            <!-- An Extended Look (Versión Completa de ~28 min) -->
             <div class="trailer-card">
-                <div class="trailer-header">An Extended Look</div>
+                <div class="trailer-header">
+                    An Extended Look
+                    <span>Gameplay Showcase</span>
+                </div>
                 <div class="video-container">
-                    <iframe src="https://www.youtube-nocookie.com/embed/Otak6Rd63i4" allowfullscreen></iframe>
+                    <iframe src="https://www.youtube-nocookie.com/embed/DbElJ2Fkmf8" allowfullscreen></iframe>
                 </div>
             </div>
 
-            <!-- Tráiler de Lanzamiento (Rockstar Games Official) -->
+            <!-- Tráiler de Lanzamiento -->
             <div class="trailer-card">
-                <div class="trailer-header">Tráiler de Lanzamiento</div>
+                <div class="trailer-header">
+                    Tráiler de Lanzamiento
+                    <span>Launch</span>
+                </div>
                 <div class="video-container">
                     <iframe src="https://www.youtube-nocookie.com/embed/rz1B4B2yBZY" allowfullscreen></iframe>
                 </div>
@@ -292,7 +351,7 @@
     </div>
 
     <footer>
-        <p>&copy; 2026 Rockstar Games / Fan Countdown Page. Todos los derechos reservados.</p>
+        <p>&copy; 2026 Rockstar Games / Fan Page de Cuenta Atrás. Todos los derechos reservados.</p>
     </footer>
 
     <script>
