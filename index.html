@@ -30,6 +30,21 @@
             position: relative;
         }
 
+        /* Scrollbar personalizado */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--neon-pink);
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--neon-cyan);
+        }
+
         /* Fondo Animado Vice City Dinámico */
         .bg-gradient {
             position: fixed;
@@ -274,7 +289,7 @@
         <p class="subtitle">Vice City Awaits • New Zealand Release Countdown</p>
     </header>
 
-    <div class="container">
+    <main class="container">
         <!-- Bloque de Cuenta Atrás -->
         <div class="countdown-card">
             <div class="countdown-info" id="status-text">
@@ -311,7 +326,7 @@
                     <span>Official</span>
                 </div>
                 <div class="video-container">
-                    <iframe src="https://www.youtube-nocookie.com/embed/QdBZY2fkU-0" allowfullscreen></iframe>
+                    <iframe src="https://www.youtube-nocookie.com/embed/QdBZY2fkU-0" title="GTA VI - Tráiler 1" allowfullscreen loading="lazy"></iframe>
                 </div>
             </div>
 
@@ -322,18 +337,18 @@
                     <span>Official</span>
                 </div>
                 <div class="video-container">
-                    <iframe src="https://www.youtube-nocookie.com/embed/Ny9U3VKzROI" allowfullscreen></iframe>
+                    <iframe src="https://www.youtube-nocookie.com/embed/Ny9U3VKzROI" title="GTA VI - Tráiler 2" allowfullscreen loading="lazy"></iframe>
                 </div>
             </div>
 
-            <!-- An Extended Look (Versión Completa de ~28 min) -->
+            <!-- An Extended Look -->
             <div class="trailer-card">
                 <div class="trailer-header">
                     An Extended Look
                     <span>Gameplay Showcase</span>
                 </div>
                 <div class="video-container">
-                    <iframe src="https://www.youtube-nocookie.com/embed/tJbzMqJGH4k" allowfullscreen></iframe>
+                    <iframe src="https://www.youtube-nocookie.com/embed/tJbzMqJGH4k" title="GTA VI - An Extended Look" allowfullscreen loading="lazy"></iframe>
                 </div>
             </div>
 
@@ -344,11 +359,11 @@
                     <span>Launch</span>
                 </div>
                 <div class="video-container">
-                    <iframe src="https://www.youtube-nocookie.com/embed/rz1B4B2yBZY" allowfullscreen></iframe>
+                    <iframe src="https://www.youtube-nocookie.com/embed/rz1B4B2yBZY" title="GTA VI - Launch Trailer" allowfullscreen loading="lazy"></iframe>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 
     <footer>
         <p>&copy; 2026 Rockstar Games / Fan Page de Cuenta Atrás. Todos los derechos reservados.</p>
@@ -356,8 +371,10 @@
 
     <script>
         // Fecha objetivo exacta del lanzamiento en Nueva Zelanda 
-        // (18 de noviembre de 2026 a las 12:00 PM UTC / 13:00 hora peninsular de España)
         const targetDate = new Date("November 18, 2026 12:00:00 UTC").getTime();
+        
+        // Guardamos el intervalo para poder detenerlo
+        const timerInterval = setInterval(updateCountdown, 1000);
 
         function updateCountdown() {
             const now = new Date().getTime();
@@ -369,6 +386,9 @@
                 document.getElementById("hours").innerText = "00";
                 document.getElementById("minutes").innerText = "00";
                 document.getElementById("seconds").innerText = "00";
+                
+                // Detenemos el reloj de forma definitiva
+                clearInterval(timerInterval);
                 return;
             }
 
@@ -383,7 +403,7 @@
             document.getElementById("seconds").innerText = String(seconds).padStart(2, '0');
         }
 
-        setInterval(updateCountdown, 1000);
+        // Ejecutar inmediatamente al cargar para evitar 1 segundo en blanco
         updateCountdown();
     </script>
 </body>
