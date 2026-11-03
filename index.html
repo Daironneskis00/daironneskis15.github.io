@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GTA VI - Cuenta Atrás Oficial (New Zealand Launch)</title>
-    <!-- Fuentes oficiales y de estilo -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800;900&family=Pricedown&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -31,21 +30,12 @@
         }
 
         /* Scrollbar personalizado */
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--bg-dark);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--neon-pink);
-            border-radius: 5px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--neon-cyan);
-        }
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: var(--neon-pink); border-radius: 5px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--neon-cyan); }
 
-        /* Fondo Animado Vice City Dinámico */
+        /* Fondo Animado */
         .bg-gradient {
             position: fixed;
             top: 0;
@@ -64,7 +54,6 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* Capa de textura sutil CRT / Scanlines */
         .scanlines {
             position: fixed;
             top: 0;
@@ -114,7 +103,7 @@
             padding: 20px;
         }
 
-        /* Tarjeta de Cuenta Atrás Estilo HUD Pro */
+        /* Cuenta Atrás */
         .countdown-card {
             background: var(--card-bg);
             border: 2px solid var(--neon-pink);
@@ -122,160 +111,97 @@
             padding: 35px;
             box-shadow: 0 0 50px rgba(255, 51, 102, 0.3), inset 0 0 25px rgba(0, 243, 255, 0.15);
             backdrop-filter: blur(12px);
-            margin: 30px auto 50px;
+            margin: 30px auto 40px;
             text-align: center;
             position: relative;
             overflow: hidden;
         }
 
-        .countdown-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--neon-cyan));
-            animation: borderScan 6s linear infinite;
-        }
-
-        @keyframes borderScan {
-            0% { left: -100%; }
-            100% { left: 100%; }
-        }
-
-        .countdown-info {
-            font-size: 1rem;
-            color: #ffc2d1;
-            margin-bottom: 25px;
-            letter-spacing: 1.5px;
-            font-weight: 600;
-        }
-
-        .countdown-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-        }
-
+        .countdown-info { font-size: 1rem; color: #ffc2d1; margin-bottom: 25px; letter-spacing: 1.5px; font-weight: 600; }
+        .countdown-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
         .time-box {
-            background: rgba(3, 1, 10, 0.75);
-            border: 1px solid var(--neon-cyan);
-            border-radius: 12px;
-            padding: 22px 10px;
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.15);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: rgba(3, 1, 10, 0.75); border: 1px solid var(--neon-cyan);
+            border-radius: 12px; padding: 22px 10px;
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.15); transition: transform 0.3s ease;
         }
+        .time-box:hover { transform: translateY(-4px); box-shadow: 0 0 25px rgba(0, 243, 255, 0.4); }
+        .time-value { font-family: 'Pricedown', sans-serif; font-size: 4rem; color: #ffffff; text-shadow: 0 0 15px var(--neon-cyan); line-height: 1; }
+        .time-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 3px; color: var(--neon-pink); margin-top: 8px; font-weight: 800; }
 
-        .time-box:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 0 25px rgba(0, 243, 255, 0.4);
-        }
-
-        .time-value {
-            font-family: 'Pricedown', sans-serif;
-            font-size: 4rem;
-            color: #ffffff;
-            text-shadow: 0 0 15px var(--neon-cyan);
-            line-height: 1;
-        }
-
-        .time-label {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            color: var(--neon-pink);
-            margin-top: 8px;
-            font-weight: 800;
-        }
-
-        /* Sección de Vídeos */
-        .section-title {
-            font-family: 'Pricedown', sans-serif;
-            font-size: 2.8rem;
-            text-align: center;
-            margin: 40px 0 25px;
-            letter-spacing: 3px;
-            color: #ffffff;
-            text-shadow: 0 0 20px var(--neon-pink);
-        }
-
-        .trailers-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-            gap: 35px;
-            margin-bottom: 60px;
-        }
-
-        .trailer-card {
+        /* Minijuego */
+        .game-section {
             background: var(--card-bg);
-            border: 1px solid rgba(255, 51, 102, 0.5);
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-        }
-
-        .trailer-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 40px rgba(0, 243, 255, 0.35);
-            border-color: var(--neon-cyan);
-        }
-
-        .trailer-header {
-            padding: 18px 22px;
-            background: linear-gradient(90deg, rgba(255,51,102,0.25), rgba(13,4,30,0.8));
-            border-bottom: 1px solid rgba(255,51,102,0.3);
-            font-weight: 800;
-            font-size: 1.15rem;
-            letter-spacing: 1.5px;
-            color: var(--neon-cyan);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .trailer-header span {
-            font-size: 0.75rem;
-            background: rgba(0, 243, 255, 0.15);
-            padding: 4px 10px;
-            border-radius: 20px;
-            color: #fff;
             border: 1px solid var(--neon-cyan);
-        }
-
-        .video-container {
-            position: relative;
-            width: 100%;
-            padding-bottom: 56.25%;
-            height: 0;
-            background: #000;
-        }
-
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        footer {
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 50px;
             text-align: center;
-            padding: 40px;
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.4);
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+        
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .game-title {
+            font-family: 'Pricedown', sans-serif;
+            font-size: 2rem;
+            color: var(--neon-pink);
+            text-shadow: 0 0 10px rgba(255, 51, 102, 0.5);
+            letter-spacing: 2px;
+        }
+
+        .game-score {
+            font-weight: 800;
+            color: var(--neon-cyan);
+            letter-spacing: 2px;
+        }
+
+        #gameCanvas {
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid rgba(0, 243, 255, 0.3);
+            border-radius: 8px;
+            width: 100%;
+            max-width: 800px;
+            height: 200px;
+            display: block;
+            margin: 0 auto;
+            cursor: pointer;
+        }
+
+        .game-instructions {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 10px;
+            text-transform: uppercase;
             letter-spacing: 1px;
         }
 
-        /* Responsive Mobile */
+        /* Vídeos */
+        .section-title {
+            font-family: 'Pricedown', sans-serif; font-size: 2.8rem; text-align: center;
+            margin: 40px 0 25px; letter-spacing: 3px; color: #ffffff; text-shadow: 0 0 20px var(--neon-pink);
+        }
+        .trailers-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); gap: 35px; margin-bottom: 60px; }
+        .trailer-card { background: var(--card-bg); border: 1px solid rgba(255, 51, 102, 0.5); border-radius: 16px; overflow: hidden; transition: all 0.4s; }
+        .trailer-card:hover { transform: translateY(-8px); box-shadow: 0 15px 40px rgba(0, 243, 255, 0.35); border-color: var(--neon-cyan); }
+        .trailer-header { padding: 18px 22px; background: linear-gradient(90deg, rgba(255,51,102,0.25), rgba(13,4,30,0.8)); border-bottom: 1px solid rgba(255,51,102,0.3); font-weight: 800; color: var(--neon-cyan); display: flex; justify-content: space-between; }
+        .trailer-header span { font-size: 0.75rem; background: rgba(0, 243, 255, 0.15); padding: 4px 10px; border-radius: 20px; color: #fff; border: 1px solid var(--neon-cyan); }
+        .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; background: #000; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+
+        footer { text-align: center; padding: 40px; font-size: 0.85rem; color: rgba(255, 255, 255, 0.4); border-top: 1px solid rgba(255, 255, 255, 0.08); }
+
         @media (max-width: 768px) {
             .logo-title { font-size: 3.8rem; }
             .countdown-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
             .time-value { font-size: 3rem; }
             .trailers-grid { grid-template-columns: 1fr; }
+            .game-header { flex-direction: column; gap: 10px; }
         }
     </style>
 </head>
@@ -290,121 +216,271 @@
     </header>
 
     <main class="container">
-        <!-- Bloque de Cuenta Atrás -->
+        <!-- Cuenta Atrás -->
         <div class="countdown-card">
             <div class="countdown-info" id="status-text">
                 🌴 TIEMPO RESTANTE PARA EL DESBLOQUEO EN NUEVA ZELANDA (DISPONIBLE EN ESPAÑA) 🌴
             </div>
             <div class="countdown-grid">
-                <div class="time-box">
-                    <div class="time-value" id="days">00</div>
-                    <div class="time-label">Días</div>
-                </div>
-                <div class="time-box">
-                    <div class="time-value" id="hours">00</div>
-                    <div class="time-label">Horas</div>
-                </div>
-                <div class="time-box">
-                    <div class="time-value" id="minutes">00</div>
-                    <div class="time-label">Minutos</div>
-                </div>
-                <div class="time-box">
-                    <div class="time-value" id="seconds">00</div>
-                    <div class="time-label">Segundos</div>
-                </div>
+                <div class="time-box"><div class="time-value" id="days">00</div><div class="time-label">Días</div></div>
+                <div class="time-box"><div class="time-value" id="hours">00</div><div class="time-label">Horas</div></div>
+                <div class="time-box"><div class="time-value" id="minutes">00</div><div class="time-label">Minutos</div></div>
+                <div class="time-box"><div class="time-value" id="seconds">00</div><div class="time-label">Segundos</div></div>
             </div>
         </div>
 
-        <!-- Sección de Tráileres Oficiales -->
+        <!-- Minijuego Vice City Runner (Caimán vs Pinchos) -->
+        <div class="game-section">
+            <div class="game-header">
+                <div class="game-title">Leonida Runner</div>
+                <div class="game-score">PUNTUACIÓN: <span id="score">0</span> | MÁX: <span id="highScore">0</span></div>
+            </div>
+            <canvas id="gameCanvas" width="800" height="200"></canvas>
+            <div class="game-instructions">Toca la pantalla, Espacio o Flecha Arriba para saltar los pinchos</div>
+        </div>
+
+        <!-- Vídeos -->
         <h2 class="section-title">Archivos Multimedia Oficiales</h2>
-        
         <div class="trailers-grid">
-            <!-- Tráiler 1 -->
             <div class="trailer-card">
-                <div class="trailer-header">
-                    Tráiler 1
-                    <span>Official</span>
-                </div>
-                <div class="video-container">
-                    <iframe src="https://www.youtube-nocookie.com/embed/QdBZY2fkU-0" title="GTA VI - Tráiler 1" allowfullscreen loading="lazy"></iframe>
-                </div>
+                <div class="trailer-header">Tráiler 1 <span>Official</span></div>
+                <div class="video-container"><iframe src="https://www.youtube-nocookie.com/embed/QdBZY2fkU-0" title="GTA VI - Tráiler 1" allowfullscreen loading="lazy"></iframe></div>
             </div>
-
-            <!-- Tráiler 2 -->
             <div class="trailer-card">
-                <div class="trailer-header">
-                    Tráiler 2
-                    <span>Official</span>
-                </div>
-                <div class="video-container">
-                    <iframe src="https://www.youtube-nocookie.com/embed/Ny9U3VKzROI" title="GTA VI - Tráiler 2" allowfullscreen loading="lazy"></iframe>
-                </div>
+                <div class="trailer-header">Tráiler 2 <span>Official</span></div>
+                <div class="video-container"><iframe src="https://www.youtube-nocookie.com/embed/Ny9U3VKzROI" title="GTA VI - Tráiler 2" allowfullscreen loading="lazy"></iframe></div>
             </div>
-
-            <!-- An Extended Look -->
             <div class="trailer-card">
-                <div class="trailer-header">
-                    An Extended Look
-                    <span>Gameplay Showcase</span>
-                </div>
-                <div class="video-container">
-                    <iframe src="https://www.youtube-nocookie.com/embed/tJbzMqJGH4k" title="GTA VI - An Extended Look" allowfullscreen loading="lazy"></iframe>
-                </div>
+                <div class="trailer-header">An Extended Look <span>Gameplay</span></div>
+                <div class="video-container"><iframe src="https://www.youtube-nocookie.com/embed/tJbzMqJGH4k" title="GTA VI - An Extended Look" allowfullscreen loading="lazy"></iframe></div>
             </div>
-
-            <!-- Tráiler de Lanzamiento -->
             <div class="trailer-card">
-                <div class="trailer-header">
-                    Tráiler de Lanzamiento
-                    <span>Launch</span>
-                </div>
-                <div class="video-container">
-                    <iframe src="https://www.youtube-nocookie.com/embed/rz1B4B2yBZY" title="GTA VI - Launch Trailer" allowfullscreen loading="lazy"></iframe>
-                </div>
+                <div class="trailer-header">Lanzamiento <span>Launch</span></div>
+                <div class="video-container"><iframe src="https://www.youtube-nocookie.com/embed/rz1B4B2yBZY" title="GTA VI - Launch Trailer" allowfullscreen loading="lazy"></iframe></div>
             </div>
         </div>
     </main>
 
     <footer>
-        <p>&copy; 2026 Rockstar Games / Fan Page de Cuenta Atrás. Todos los derechos reservados.</p>
+        <p>&copy; 2026 Rockstar Games / Fan Page de Cuenta Atrás.</p>
     </footer>
 
     <script>
-        // Fecha objetivo exacta del lanzamiento en Nueva Zelanda 
+        // LÓGICA DE LA CUENTA ATRÁS
         const targetDate = new Date("November 18, 2026 12:00:00 UTC").getTime();
-        
-        // Guardamos el intervalo para poder detenerlo
         const timerInterval = setInterval(updateCountdown, 1000);
 
         function updateCountdown() {
             const now = new Date().getTime();
             const distance = targetDate - now;
-
             if (distance < 0) {
                 document.getElementById("status-text").innerHTML = "🔥 ¡EL JUEGO YA ESTÁ DISPONIBLE EN NUEVA ZELANDA / ESPAÑA! ¡A JUGAR! 🔥";
                 document.getElementById("days").innerText = "00";
                 document.getElementById("hours").innerText = "00";
                 document.getElementById("minutes").innerText = "00";
                 document.getElementById("seconds").innerText = "00";
-                
-                // Detenemos el reloj de forma definitiva
                 clearInterval(timerInterval);
                 return;
             }
+            document.getElementById("days").innerText = String(Math.floor(distance / (1000 * 60 * 60 * 24))).padStart(2, '0');
+            document.getElementById("hours").innerText = String(Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
+            document.getElementById("minutes").innerText = String(Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+            document.getElementById("seconds").innerText = String(Math.floor((distance % (1000 * 60)) / 1000)).padStart(2, '0');
+        }
+        updateCountdown();
 
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        // LÓGICA DEL MINIJUEGO
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+        
+        let gameLoop;
+        let isPlaying = false;
+        let isGameOver = false;
+        let score = 0;
+        let highScore = localStorage.getItem('gtaHighScore') || 0;
+        document.getElementById('highScore').innerText = highScore;
 
-            document.getElementById("days").innerText = String(days).padStart(2, '0');
-            document.getElementById("hours").innerText = String(hours).padStart(2, '0');
-            document.getElementById("minutes").innerText = String(minutes).padStart(2, '0');
-            document.getElementById("seconds").innerText = String(seconds).padStart(2, '0');
+        // Variables del juego
+        let gameSpeed = 5;
+        let gravity = 0.6;
+        
+        const player = {
+            x: 50, y: 150, width: 35, height: 35, // Ajustado al tamaño del emoji
+            dy: 0, jumpForce: -11.5, grounded: false,
+            color: '#ff3366' // neon pink glow
+        };
+        
+        let obstacles = [];
+
+        function initGame() {
+            obstacles = [];
+            score = 0;
+            gameSpeed = 5;
+            player.y = 150;
+            player.dy = 0;
+            isGameOver = false;
+            isPlaying = true;
+            document.getElementById('score').innerText = score;
+            spawnObstacle();
+            gameLoop = requestAnimationFrame(updateGame);
         }
 
-        // Ejecutar inmediatamente al cargar para evitar 1 segundo en blanco
-        updateCountdown();
+        function spawnObstacle() {
+            let size = Math.random() * 15 + 25; // Altura del pincho
+            obstacles.push({
+                x: canvas.width,
+                y: 180 - size,
+                width: 25, // Base del pincho
+                height: size,
+                color: '#00f3ff' // neon cyan
+            });
+        }
+
+        function jump() {
+            if (!isPlaying && !isGameOver) {
+                initGame();
+                return;
+            }
+            if (isGameOver) {
+                initGame();
+                return;
+            }
+            if (player.grounded) {
+                player.dy = player.jumpForce;
+                player.grounded = false;
+            }
+        }
+
+        function updateGame() {
+            if (isGameOver) return;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Suelo Neón
+            ctx.beginPath();
+            ctx.moveTo(0, 180);
+            ctx.lineTo(canvas.width, 180);
+            ctx.strokeStyle = '#ff3366';
+            ctx.lineWidth = 2;
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = '#ff3366';
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            // Físicas del jugador
+            player.dy += gravity;
+            player.y += player.dy;
+
+            if (player.y + player.height >= 180) {
+                player.y = 180 - player.height;
+                player.dy = 0;
+                player.grounded = true;
+            }
+
+            // Dibujar Caimán
+            ctx.save();
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = player.color;
+            ctx.font = "35px Arial";
+            ctx.textBaseline = "middle";
+            ctx.textAlign = "center";
+            // Trasladar y voltear horizontalmente el canvas temporalmente
+            // (por defecto el emoji mira a la izquierda, así lo hacemos mirar a la derecha)
+            ctx.translate(player.x + player.width / 2, player.y + player.height / 2);
+            ctx.scale(-1, 1); 
+            ctx.fillText("🐊", 0, 0);
+            ctx.restore();
+            ctx.shadowBlur = 0;
+
+            // Obstáculos
+            for (let i = 0; i < obstacles.length; i++) {
+                let obs = obstacles[i];
+                obs.x -= gameSpeed;
+
+                // Dibujar Pincho (Triángulo)
+                ctx.fillStyle = obs.color;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = obs.color;
+                
+                ctx.beginPath();
+                ctx.moveTo(obs.x + obs.width / 2, obs.y); // Punta
+                ctx.lineTo(obs.x + obs.width, obs.y + obs.height); // Abajo derecha
+                ctx.lineTo(obs.x, obs.y + obs.height); // Abajo izquierda
+                ctx.closePath();
+                ctx.fill();
+                
+                ctx.shadowBlur = 0;
+
+                // Colisión (Hitbox ajustada para que el triángulo sea justo)
+                let hitMargin = 8;
+                if (player.x + hitMargin < obs.x + obs.width &&
+                    player.x + player.width - hitMargin > obs.x &&
+                    player.y + hitMargin < obs.y + obs.height &&
+                    player.y + player.height - hitMargin > obs.y + hitMargin) {
+                    gameOver();
+                }
+            }
+
+            // Eliminar obstáculos fuera de pantalla y generar nuevos
+            if (obstacles.length > 0 && obstacles[0].x < -50) {
+                obstacles.shift();
+            }
+
+            // Generación aleatoria de distancia entre pinchos
+            if (obstacles.length === 0 || canvas.width - obstacles[obstacles.length - 1].x > (Math.random() * 250 + 250)) {
+                spawnObstacle();
+            }
+
+            // Puntuación
+            score++;
+            if (score % 100 === 0) gameSpeed += 0.2; 
+            
+            if (score % 10 === 0) {
+                document.getElementById('score').innerText = Math.floor(score / 10);
+            }
+
+            requestAnimationFrame(updateGame);
+        }
+
+        function gameOver() {
+            isGameOver = true;
+            isPlaying = false;
+            let finalScore = Math.floor(score / 10);
+            if (finalScore > highScore) {
+                highScore = finalScore;
+                localStorage.setItem('gtaHighScore', highScore);
+                document.getElementById('highScore').innerText = highScore;
+            }
+            
+            // Texto Game Over
+            ctx.fillStyle = "rgba(0,0,0,0.7)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = "#ff3366";
+            ctx.font = "30px Pricedown, sans-serif";
+            ctx.textAlign = "center";
+            ctx.fillText("WASTED", canvas.width / 2, canvas.height / 2);
+            
+            ctx.fillStyle = "#fff";
+            ctx.font = "14px Montserrat, sans-serif";
+            ctx.fillText("Toca para reiniciar", canvas.width / 2, canvas.height / 2 + 30);
+        }
+
+        // Pantalla inicial
+        ctx.fillStyle = "#00f3ff";
+        ctx.font = "24px Pricedown, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("TOCA PARA EMPEZAR", canvas.width / 2, canvas.height / 2 + 10);
+
+        // Controles
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' || e.code === 'ArrowUp') {
+                e.preventDefault();
+                jump();
+            }
+        });
+        canvas.addEventListener('touchstart', (e) => { e.preventDefault(); jump(); }, {passive: false});
+        canvas.addEventListener('mousedown', jump);
     </script>
 </body>
 </html>
