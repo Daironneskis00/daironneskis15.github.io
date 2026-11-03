@@ -162,12 +162,12 @@
         }
 
         #gameCanvas {
-            background: linear-gradient(to bottom, rgba(7, 1, 18, 0.8), rgba(30, 5, 50, 0.9));
+            background: linear-gradient(to bottom, #130a2a, #ff6633);
             border: 2px solid rgba(0, 243, 255, 0.3);
             border-radius: 8px;
             width: 100%;
             max-width: 800px;
-            height: 200px;
+            height: 250px; /* Un poco más alto para el parallax */
             display: block;
             margin: 0 auto;
             cursor: pointer;
@@ -229,14 +229,15 @@
             </div>
         </div>
 
-        <!-- Minijuego Vice City Runner -->
+        <!-- Minijuego GTA VI - Gráficos Realistas / Vectoriales -->
         <div class="game-section">
             <div class="game-header">
-                <div class="game-title">Leonida Runner <span>(Synthwave Edition)</span></div>
+                <div class="game-title">Vice City Getaway</div>
                 <div class="game-score">PUNTUACIÓN: <span id="score">0</span> | MÁX: <span id="highScore">0</span></div>
             </div>
-            <canvas id="gameCanvas" width="800" height="200"></canvas>
-            <div class="game-instructions">Toca la pantalla, Espacio o Flecha Arriba para saltar los cristales</div>
+            <!-- Canvas ampliado a 250px de altura para mejor horizonte -->
+            <canvas id="gameCanvas" width="800" height="250"></canvas>
+            <div class="game-instructions">Toca la pantalla, Espacio o Flecha Arriba para saltar las barricadas policiales</div>
         </div>
 
         <!-- Vídeos -->
@@ -289,7 +290,7 @@
         }
         updateCountdown();
 
-        // --- LÓGICA DEL MINIJUEGO CON GRÁFICOS MEJORADOS ---
+        // --- LÓGICA DEL MINIJUEGO (GRÁFICOS REALISTAS / VECTORIALES) ---
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
         
@@ -297,29 +298,42 @@
         let isPlaying = false;
         let isGameOver = false;
         let score = 0;
-        let tick = 0; // Para animaciones
-        let bgOffset = 0; // Para el efecto de velocidad del fondo
+        let tick = 0; 
+        let bgOffset = 0; // Para el efecto Parallax del fondo
+        let roadOffset = 0; // Para las líneas de la carretera
         
         let highScore = localStorage.getItem('gtaHighScore') || 0;
         document.getElementById('highScore').innerText = highScore;
 
-        let gameSpeed = 5;
-        let gravity = 0.6;
+        let gameSpeed = 7.5;
+        let gravity = 0.65;
         
+        // El jugador ahora es un coche deportivo (más ancho y bajo)
         const player = {
-            x: 50, y: 135, width: 35, height: 45, 
-            dy: 0, jumpForce: -11.5, grounded: false
+            x: 60, y: 190, width: 85, height: 25, 
+            dy: 0, jumpForce: -12.5, grounded: false
         };
         
         let obstacles = [];
+
+        // Generador de edificios para el Skyline estático
+        const buildings = [];
+        for(let i=0; i<30; i++) {
+            buildings.push({
+                w: Math.random() * 40 + 30,
+                h: Math.random() * 100 + 40,
+                x: i * 60
+            });
+        }
 
         function initGame() {
             obstacles = [];
             score = 0;
             tick = 0;
             bgOffset = 0;
-            gameSpeed = 5.5;
-            player.y = 135;
+            roadOffset = 0;
+            gameSpeed = 7.5;
+            player.y = 190;
             player.dy = 0;
             isGameOver = false;
             isPlaying = true;
@@ -329,12 +343,12 @@
         }
 
         function spawnObstacle() {
-            let size = Math.random() * 15 + 30; // Altura del cristal
+            // Barricada policial
             obstacles.push({
                 x: canvas.width,
-                y: 180 - size,
-                width: 25, 
-                height: size
+                y: 185,
+                width: 35, 
+                height: 30
             });
         }
 
@@ -347,147 +361,193 @@
             }
         }
 
-        // Función para dibujar al Caimán Humanoide
-        function drawGator(ctx, x, y, isJumping, tick) {
+        // DIBUJAR COCHE DEPORTIVO REALISTA (Estilo GTA Cheetah/Banshee)
+        function drawSportsCar(ctx, x, y, isJumping, tick) {
             ctx.save();
             ctx.translate(x, y);
+            
+            // Inclinación aerodinámica al saltar
+            if (isJumping) {
+                ctx.rotate(-0.15);
+            }
 
-            const skin = '#00ff66';   // Verde neón
-            const shirt = '#ff3366';  // Camisa rosa Vice City
-            const shades = '#070112'; // Gafas oscuras
+            // --- Llantas ---
+            ctx.fillStyle = '#111'; // Neumático
+            ctx.beginPath(); ctx.arc(15, 22, 10, 0, Math.PI*2); ctx.fill(); // Trasera
+            ctx.beginPath(); ctx.arc(70, 22, 10, 0, Math.PI*2); ctx.fill(); // Delantera
 
-            // Cola
-            ctx.fillStyle = skin;
+            // Rines cromados girando
+            ctx.strokeStyle = '#aaa';
+            ctx.lineWidth = 2.5;
+            
+            ctx.save();
+            ctx.translate(15, 22);
+            ctx.rotate(tick * 0.4);
+            ctx.beginPath(); ctx.moveTo(-6,0); ctx.lineTo(6,0); ctx.moveTo(0,-6); ctx.lineTo(0,6); ctx.stroke();
+            ctx.restore();
+            
+            ctx.save();
+            ctx.translate(70, 22);
+            ctx.rotate(tick * 0.4);
+            ctx.beginPath(); ctx.moveTo(-6,0); ctx.lineTo(6,0); ctx.moveTo(0,-6); ctx.lineTo(0,6); ctx.stroke();
+            ctx.restore();
+
+            // --- Carrocería ---
+            let bodyGrad = ctx.createLinearGradient(0, 0, 0, 25);
+            bodyGrad.addColorStop(0, '#ff3366'); // Rosa brillante
+            bodyGrad.addColorStop(1, '#660022'); // Sombra inferior
+
+            ctx.fillStyle = bodyGrad;
             ctx.beginPath();
-            ctx.moveTo(8, 30);
-            ctx.lineTo(-12, 38);
-            ctx.lineTo(8, 22);
+            ctx.moveTo(0, 15);     // Alerón trasero
+            ctx.lineTo(15, 5);     // Maletero/Cristal trasero
+            ctx.lineTo(45, 2);     // Techo
+            ctx.lineTo(65, 10);    // Parabrisas
+            ctx.lineTo(85, 14);    // Morro afilado
+            ctx.lineTo(82, 22);    // Parachoques delantero inferior
+            ctx.lineTo(0, 22);     // Parachoques trasero inferior
+            ctx.closePath();
             ctx.fill();
 
-            // Piernas animadas al correr
-            let leg1 = isJumping ? -5 : Math.sin(tick * 0.4) * 8;
-            let leg2 = isJumping ? -2 : Math.sin(tick * 0.4 + Math.PI) * 8;
-            ctx.fillStyle = skin;
-            ctx.fillRect(10 + leg1, 30, 6, 15);  // Pierna trasera
-            ctx.fillRect(20 + leg2, 30, 6, 15);  // Pierna delantera
+            // --- Cristales (Tintados con reflejo) ---
+            ctx.fillStyle = 'rgba(0, 243, 255, 0.7)';
+            ctx.beginPath();
+            ctx.moveTo(20, 6);
+            ctx.lineTo(43, 4);
+            ctx.lineTo(60, 10);
+            ctx.lineTo(43, 11);
+            ctx.lineTo(20, 11);
+            ctx.closePath();
+            ctx.fill();
+            
+            // --- Faros y luces traseras ---
+            // Luz trasera (Roja con resplandor)
+            ctx.fillStyle = '#ff0000';
+            ctx.shadowBlur = 15; ctx.shadowColor = '#ff0000';
+            ctx.fillRect(0, 13, 3, 5);
+            
+            // Faro delantero (Blanco con resplandor)
+            ctx.fillStyle = '#ffffff';
+            ctx.shadowBlur = 15; ctx.shadowColor = '#ffffff';
+            ctx.fillRect(80, 14, 4, 3);
+            
+            ctx.restore();
+        }
 
-            // Torso (Camisa)
-            ctx.fillStyle = shirt;
-            ctx.fillRect(10, 10, 18, 22);
-
-            // Cabeza y hocico
-            ctx.fillStyle = skin;
-            ctx.fillRect(12, -10, 16, 20); // Base cabeza
-            ctx.fillRect(28, -2, 16, 10);  // Hocico mirando a la derecha
-
-            // Gafas de sol (Estilo Thug Life / GTA)
-            ctx.fillStyle = shades;
-            ctx.fillRect(20, -6, 14, 6); 
-            ctx.fillStyle = '#00f3ff'; // Reflejo cian en el cristal
-            ctx.fillRect(22, -5, 4, 2);
-
-            // Brazo (Moviéndose en dirección contraria a las piernas)
-            let arm = isJumping ? -8 : Math.sin(tick * 0.4 + Math.PI) * 6;
-            ctx.fillStyle = skin;
-            ctx.fillRect(16 + arm, 14, 6, 14);
+        // DIBUJAR BARRICADA POLICIAL REALISTA
+        function drawBarricade(ctx, x, y, width, height) {
+            ctx.save();
+            ctx.translate(x, y);
+            
+            // Patas metálicas
+            ctx.fillStyle = '#333';
+            ctx.fillRect(2, 0, 4, height);
+            ctx.fillRect(width - 6, 0, 4, height);
+            
+            // Tablón principal
+            ctx.fillStyle = '#e65c00'; // Naranja reflectante
+            ctx.fillRect(0, 5, width, 12);
+            
+            // Franjas blancas diagonales
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.moveTo(5, 5); ctx.lineTo(12, 5); ctx.lineTo(7, 17); ctx.lineTo(0, 17); ctx.fill();
+            ctx.moveTo(20, 5); ctx.lineTo(27, 5); ctx.lineTo(22, 17); ctx.lineTo(15, 17); ctx.fill();
+            ctx.moveTo(35, 5); ctx.lineTo(42, 5); ctx.lineTo(37, 17); ctx.lineTo(30, 17); ctx.fill();
+            
+            // Luz parpadeante de policía arriba (Azul/Roja)
+            if (Math.floor(tick / 10) % 2 === 0) {
+                ctx.fillStyle = '#0055ff';
+                ctx.shadowBlur = 10; ctx.shadowColor = '#0055ff';
+            } else {
+                ctx.fillStyle = '#ff0000';
+                ctx.shadowBlur = 10; ctx.shadowColor = '#ff0000';
+            }
+            ctx.beginPath(); ctx.arc(width/2, 2, 3, 0, Math.PI*2); ctx.fill();
 
             ctx.restore();
         }
 
-        // Función para dibujar el fondo estilo Synthwave
+        // DIBUJAR FONDO (PARALLAX Y CARRETERA)
         function drawBackground() {
-            // Sol Synthwave
-            let sunX = canvas.width / 2;
-            let sunY = 130;
-            let sunRadius = 60;
-            let sunGrad = ctx.createLinearGradient(0, sunY - sunRadius, 0, sunY + sunRadius);
-            sunGrad.addColorStop(0, "#ff3366");
-            sunGrad.addColorStop(1, "#ffe359");
-            ctx.fillStyle = sunGrad;
-            ctx.beginPath();
-            ctx.arc(sunX, sunY, sunRadius, 0, Math.PI * 2);
-            ctx.fill();
+            // 1. Sol Gigante
+            ctx.fillStyle = 'rgba(255, 200, 0, 0.15)';
+            ctx.beginPath(); ctx.arc(canvas.width/2, 140, 90, 0, Math.PI*2); ctx.fill();
+            ctx.fillStyle = 'rgba(255, 100, 0, 0.4)';
+            ctx.beginPath(); ctx.arc(canvas.width/2, 140, 70, 0, Math.PI*2); ctx.fill();
 
-            // Líneas horizontales cortando el sol (efecto retro)
-            ctx.fillStyle = "rgba(7, 1, 18, 0.8)";
-            for(let i = 0; i < 5; i++) {
-                ctx.fillRect(sunX - sunRadius, sunY + (i * 12), sunRadius * 2, 4);
+            // 2. Skyline de la ciudad (Efecto Parallax, se mueve lento)
+            bgOffset -= gameSpeed * 0.15;
+            if (bgOffset <= -1000) bgOffset = 0; // Reiniciar loop de edificios
+            
+            ctx.fillStyle = '#0a0318'; // Edificios oscuros silueta
+            for(let i = 0; i < buildings.length * 2; i++) {
+                let b = buildings[i % buildings.length];
+                let bx = (i * 60) + bgOffset;
+                
+                // Solo dibujar si está en pantalla
+                if (bx > -100 && bx < canvas.width) {
+                    ctx.fillRect(bx, 210 - b.h, b.w, b.h);
+                    
+                    // Ventanas aleatorias encendidas
+                    ctx.fillStyle = 'rgba(255, 255, 200, 0.4)';
+                    if (i % 3 === 0) ctx.fillRect(bx + 5, 210 - b.h + 10, 4, 4);
+                    if (i % 2 === 0) ctx.fillRect(bx + 20, 210 - b.h + 30, 4, 4);
+                    ctx.fillStyle = '#0a0318';
+                }
             }
 
-            // Suelo con efecto de velocidad (Grid Lines)
-            ctx.strokeStyle = "rgba(255, 51, 102, 0.4)";
+            // 3. Suelo / Asfalto
+            ctx.fillStyle = '#1a1a24';
+            ctx.fillRect(0, 210, canvas.width, 40); // Carretera
+            
+            ctx.strokeStyle = '#ff3366'; // Borde neón separando ciudad y carretera
             ctx.lineWidth = 2;
-            
-            // Línea horizontal principal del suelo
-            ctx.beginPath();
-            ctx.moveTo(0, 180);
-            ctx.lineTo(canvas.width, 180);
-            ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(0, 210); ctx.lineTo(canvas.width, 210); ctx.stroke();
 
-            // Pequeñas líneas moviéndose para dar sensación de velocidad
-            bgOffset -= gameSpeed;
-            if (bgOffset <= -40) bgOffset = 0;
+            // 4. Marcas viales moviéndose rápido (Sensación de velocidad)
+            roadOffset -= gameSpeed;
+            if (roadOffset <= -60) roadOffset = 0;
             
-            for(let i = 0; i < canvas.width + 40; i += 40) {
-                let lx = i + bgOffset;
-                ctx.beginPath();
-                ctx.moveTo(lx, 180);
-                ctx.lineTo(lx - 20, 200); // Ángulo de perspectiva
-                ctx.stroke();
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+            for(let i = 0; i < canvas.width + 60; i += 60) {
+                ctx.fillRect(i + roadOffset, 230, 30, 3);
             }
         }
 
         function updateGame() {
             if (isGameOver) return;
-            tick++; // Aumentar tick para la animación
+            tick++;
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Dibujar fondo Synthwave
+            // 1. Dibujar el entorno (Parallax)
             drawBackground();
 
-            // Físicas del jugador
+            // 2. Físicas del Coche
             player.dy += gravity;
             player.y += player.dy;
 
-            if (player.y + player.height >= 180) {
-                player.y = 180 - player.height;
+            // Límite del suelo (Ajustado a la nueva altura del coche y canvas)
+            if (player.y + player.height >= 210) {
+                player.y = 210 - player.height;
                 player.dy = 0;
                 player.grounded = true;
             }
 
-            // Dibujar Caimán Humanoide con un sutil brillo
-            ctx.shadowBlur = 10;
-            ctx.shadowColor = '#00ff66';
-            drawGator(ctx, player.x, player.y, !player.grounded, tick);
-            ctx.shadowBlur = 0; // Reset
+            // 3. Dibujar Vehículo
+            drawSportsCar(ctx, player.x, player.y, !player.grounded, tick);
 
-            // Obstáculos
+            // 4. Obstáculos (Barricadas Policiales)
             for (let i = 0; i < obstacles.length; i++) {
                 let obs = obstacles[i];
                 obs.x -= gameSpeed;
 
-                // Dibujar obstáculo (Cristal de Neón con Gradiente)
-                let grad = ctx.createLinearGradient(0, obs.y, 0, obs.y + obs.height);
-                grad.addColorStop(0, '#00f3ff'); // Punta cian
-                grad.addColorStop(1, '#9d00ff'); // Base morada
-                
-                ctx.fillStyle = grad;
-                ctx.shadowBlur = 15;
-                ctx.shadowColor = '#00f3ff';
-                
-                ctx.beginPath();
-                ctx.moveTo(obs.x + obs.width / 2, obs.y); // Punta superior
-                ctx.lineTo(obs.x + obs.width, obs.y + obs.height); // Abajo derecha
-                ctx.lineTo(obs.x, obs.y + obs.height); // Abajo izquierda
-                ctx.closePath();
-                ctx.fill();
-                
-                ctx.shadowBlur = 0;
+                drawBarricade(ctx, obs.x, obs.y, obs.width, obs.height);
 
-                // Colisión (Hitbox adaptado al cuerpo del caimán humanoide)
+                // Colisión (Hitbox muy ajustado para que sea justo saltar)
                 let hitMarginX = 8;
-                let hitMarginY = 10;
+                let hitMarginY = 5;
                 if (player.x + hitMarginX < obs.x + obs.width &&
                     player.x + player.width - hitMarginX > obs.x &&
                     player.y + hitMarginY < obs.y + obs.height &&
@@ -496,19 +556,19 @@
                 }
             }
 
-            // Eliminar obstáculos que pasaron
+            // Eliminar obstáculos superados
             if (obstacles.length > 0 && obstacles[0].x < -50) {
                 obstacles.shift();
             }
 
-            // Generar nuevos cristales con distancia aleatoria progresiva
-            if (obstacles.length === 0 || canvas.width - obstacles[obstacles.length - 1].x > (Math.random() * 250 + 300)) {
+            // Generar nuevos obstáculos
+            if (obstacles.length === 0 || canvas.width - obstacles[obstacles.length - 1].x > (Math.random() * 300 + 400)) {
                 spawnObstacle();
             }
 
-            // Puntuación y aumento de dificultad
+            // Puntuación y aumento de velocidad
             score++;
-            if (score % 100 === 0) gameSpeed += 0.2; 
+            if (score % 100 === 0) gameSpeed += 0.25; 
             
             if (score % 10 === 0) {
                 document.getElementById('score').innerText = Math.floor(score / 10);
@@ -527,33 +587,33 @@
                 document.getElementById('highScore').innerText = highScore;
             }
             
-            // Texto Game Over
-            ctx.fillStyle = "rgba(0,0,0,0.7)";
+            // Pantalla de WASTED estílo GTA
+            ctx.fillStyle = "rgba(0,0,0,0.75)";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
-            ctx.fillStyle = "#ff3366";
-            ctx.font = "30px Pricedown, sans-serif";
+            ctx.fillStyle = "#ff0000"; // Rojo clásico de Wasted
+            ctx.font = "40px Pricedown, sans-serif";
             ctx.textAlign = "center";
-            ctx.shadowBlur = 10;
-            ctx.shadowColor = '#ff3366';
-            ctx.fillText("WASTED", canvas.width / 2, canvas.height / 2);
+            ctx.shadowBlur = 20;
+            ctx.shadowColor = '#ff0000';
+            ctx.fillText("BUSTED / WASTED", canvas.width / 2, canvas.height / 2);
             ctx.shadowBlur = 0;
             
             ctx.fillStyle = "#fff";
             ctx.font = "14px Montserrat, sans-serif";
-            ctx.fillText("Toca para reiniciar", canvas.width / 2, canvas.height / 2 + 30);
+            ctx.fillText("La policía te ha pillado. Toca para reiniciar.", canvas.width / 2, canvas.height / 2 + 40);
         }
 
-        // Pantalla inicial del juego
-        ctx.fillStyle = "#00f3ff";
-        ctx.font = "24px Pricedown, sans-serif";
+        // Pantalla inicial
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "26px Pricedown, sans-serif";
         ctx.textAlign = "center";
         ctx.shadowBlur = 10;
         ctx.shadowColor = '#00f3ff';
-        ctx.fillText("TOCA PARA EMPEZAR", canvas.width / 2, canvas.height / 2 + 10);
+        ctx.fillText("TOCA PARA HUIR DE LA POLICÍA", canvas.width / 2, canvas.height / 2 + 10);
         ctx.shadowBlur = 0;
 
-        // Controles de salto
+        // Controles
         window.addEventListener('keydown', (e) => {
             if (e.code === 'Space' || e.code === 'ArrowUp') {
                 e.preventDefault();
