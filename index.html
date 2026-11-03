@@ -3,269 +3,329 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GTA VI • Cuenta Atrás & Truco Nueva Zelanda</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- Fuentes oficiales -->
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <title>GTA VI - Cuenta Atrás Oficial (New Zealand Launch)</title>
+    <!-- Fuentes de Google estilo Vice City -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,700;0,900;1,400&family=Pricedown&display=swap" rel="stylesheet">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #030107;
+            background-color: #0b021d;
             color: #ffffff;
+            font-family: 'Montserrat', sans-serif;
             overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
         }
-        .font-orbitron {
-            font-family: 'Orbitron', sans-serif;
-        }
-        .vice-gradient-anim {
-            background: linear-gradient(270deg, #ff007f, #7928ca, #00dfd8, #ff007f);
+
+        /* Fondo Animado Estilo GTA VI (Gradiente Neón Vice City) */
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0b021d 0%, #290b3b 35%, #591653 70%, #ff3366 100%);
             background-size: 400% 400%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: gradientMove 10s ease infinite;
+            animation: gradientBG 15s ease infinite;
+            z-index: -2;
         }
-        @keyframes gradientMove {
+
+        @keyframes gradientBG {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
-        .neon-pink {
-            text-shadow: 0 0 15px rgba(255, 0, 127, 0.8), 0 0 30px rgba(255, 0, 127, 0.4);
-        }
-        .neon-cyan {
-            text-shadow: 0 0 15px rgba(0, 223, 216, 0.8), 0 0 30px rgba(0, 223, 216, 0.4);
-        }
-        .glass-panel {
-            background: linear-gradient(135deg, rgba(18, 13, 33, 0.9) 0%, rgba(8, 6, 16, 0.95) 100%);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 0, 127, 0.3);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8);
-        }
-        .ambient-glow-1 {
-            position: absolute;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(255, 0, 127, 0.2) 0%, transparent 70%);
-            top: 10%;
-            left: 10%;
-            z-index: 0;
+
+        /* Efecto de rejilla o scanlines sutil */
+        .overlay-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background-size: 100% 4px, 6px 100%;
+            z-index: -1;
             pointer-events: none;
-            animation: pulseGlow 6s ease-in-out infinite alternate;
         }
-        .ambient-glow-2 {
-            position: absolute;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(0, 223, 216, 0.15) 0%, transparent 70%);
-            bottom: 10%;
-            right: 10%;
-            z-index: 0;
-            pointer-events: none;
-            animation: pulseGlow 6s ease-in-out infinite alternate-reverse;
+
+        header {
+            text-align: center;
+            padding: 40px 20px 20px;
         }
+
+        .logo-title {
+            font-family: 'Pricedown', sans-serif;
+            font-size: 5rem;
+            letter-spacing: 3px;
+            background: linear-gradient(180deg, #fff 20%, #ffc0cb 50%, #ff3366 80%, #990033 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(255, 51, 102, 0.6);
+            margin-bottom: 5px;
+            animation: pulseGlow 3s ease-in-out infinite alternate;
+        }
+
         @keyframes pulseGlow {
-            0% { transform: scale(1); opacity: 0.6; }
-            100% { transform: scale(1.2); opacity: 1; }
+            0% { filter: drop-shadow(0 0 10px rgba(255, 51, 102, 0.4)); }
+            100% { filter: drop-shadow(0 0 25px rgba(0, 243, 255, 0.7)); }
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: #00f3ff;
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+        }
+
+        /* Contenedor Principal */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Caja de Cuenta Atrás */
+        .countdown-card {
+            background: rgba(15, 5, 30, 0.75);
+            border: 2px solid #ff3366;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 0 40px rgba(255, 51, 102, 0.3), inset 0 0 20px rgba(0, 243, 255, 0.1);
+            backdrop-filter: blur(10px);
+            margin: 30px auto;
+            text-align: center;
+        }
+
+        .countdown-info {
+            font-size: 0.95rem;
+            color: #ffc0cb;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+        }
+
+        .countdown-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .time-box {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid #00f3ff;
+            border-radius: 10px;
+            padding: 20px 10px;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+        }
+
+        .time-value {
+            font-family: 'Pricedown', sans-serif;
+            font-size: 3.5rem;
+            color: #ffffff;
+            text-shadow: 0 0 15px #00f3ff;
+        }
+
+        .time-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #ff3366;
+            margin-top: 5px;
+            font-weight: 700;
+        }
+
+        /* Sección de Vídeos / Tráileres */
+        .section-title {
+            font-family: 'Pricedown', sans-serif;
+            font-size: 2.5rem;
+            text-align: center;
+            margin: 50px 0 25px;
+            letter-spacing: 2px;
+            color: #fff;
+            text-shadow: 0 0 15px #ff3366;
+        }
+
+        .trailers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .trailer-card {
+            background: rgba(15, 5, 30, 0.8);
+            border: 1px solid #ff3366;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(255, 51, 102, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .trailer-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.4);
+            border-color: #00f3ff;
+        }
+
+        .trailer-header {
+            padding: 15px 20px;
+            background: linear-gradient(90deg, rgba(255,51,102,0.2), transparent);
+            border-bottom: 1px solid rgba(255,51,102,0.3);
+            font-weight: 700;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            color: #00f3ff;
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* Relación de aspecto 16:9 */
+            height: 0;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.5);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Responsive para móviles */
+        @media (max-width: 768px) {
+            .logo-title { font-size: 3.5rem; }
+            .countdown-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .time-value { font-size: 2.5rem; }
+            .trailers-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between relative selection:bg-pink-500 selection:text-white">
+<body>
 
-    <!-- Luces ambientales animadas -->
-    <div class="ambient-glow-1"></div>
-    <div class="ambient-glow-2"></div>
+    <div class="bg-gradient"></div>
+    <div class="overlay-grid"></div>
 
-    <!-- CABECERA -->
-    <header class="w-full text-center py-10 px-4 border-b border-pink-600/20 bg-black/80 backdrop-blur-md relative z-10 shadow-2xl">
-        <div class="inline-block mb-3 px-4 py-1.5 rounded-full bg-pink-500/10 border border-pink-500/30 text-pink-400 text-xs font-orbitron tracking-widest uppercase shadow-lg">
-            🌴 Operación Leonida • Edición España
-        </div>
-        <h1 class="text-3xl md:text-6xl font-black font-orbitron tracking-wider neon-pink">
-            GTA VI <span class="vice-gradient-anim">NEW ZEALAND TRICK</span>
-        </h1>
+    <header>
+        <h1 class="logo-title">Grand Theft Auto VI</h1>
+        <p class="subtitle">Vice City Awaits • New Zealand Release Countdown</p>
     </header>
 
-    <!-- CONTENIDO PRINCIPAL -->
-    <main class="max-w-6xl mx-auto px-4 py-10 w-full flex-grow flex flex-col items-center relative z-10">
+    <div class="container">
+        <!-- Bloque de Cuenta Atrás -->
+        <div class="countdown-card">
+            <div class="countdown-info" id="status-text">
+                ⏰ Tiempo restante para el desbloqueo en Nueva Zelanda (Disponible en España)
+            </div>
+            <div class="countdown-grid">
+                <div class="time-box">
+                    <div class="time-value" id="days">00</div>
+                    <div class="time-label">Días</div>
+                </div>
+                <div class="time-box">
+                    <div class="time-value" id="hours">00</div>
+                    <div class="time-label">Horas</div>
+                </div>
+                <div class="time-box">
+                    <div class="time-value" id="minutes">00</div>
+                    <div class="time-label">Minutos</div>
+                </div>
+                <div class="time-box">
+                    <div class="time-value" id="seconds">00</div>
+                    <div class="time-label">Segundos</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de Tráileres -->
+        <h2 class="section-title">Archivos Multimedia Oficiales</h2>
         
-        <!-- GUÍA DETALLADA DEL TRUCO (ARRIBA) -->
-        <section class="glass-panel rounded-2xl p-6 md:p-8 mb-10 w-full border-l-4 border-l-cyan-400">
-            <h2 class="text-xl md:text-2xl font-bold font-orbitron text-cyan-400 mb-4 neon-cyan flex items-center gap-2">
-                📖 Guía Definitiva: ¿Cómo funciona el truco de Nueva Zelanda?
-            </h2>
-            <div class="space-y-4 text-gray-300 text-sm md:text-base leading-relaxed">
-                <p>
-                    El lanzamiento oficial de <strong>Grand Theft Auto VI</strong> está programado para el <strong class="text-white">19 de noviembre de 2026</strong>. No obstante, las editoras activan los videojuegos basándose en la medianoche local de cada territorio.
-                </p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-                    <div class="bg-black/50 border border-pink-500/30 rounded-xl p-4">
-                        <span class="block text-pink-400 font-orbitron font-bold text-xs uppercase mb-1">⏰ La Ventaja Horaria</span>
-                        <p class="text-xs text-gray-300">Nueva Zelanda se sitúa varias horas por delante de España. Su medianoche de estreno se corresponde exactamente con las <strong class="text-white">12:00 del mediodía en la España peninsular del 18 de noviembre de 2026</strong>.</p>
-                    </div>
-                    <div class="bg-black/50 border border-cyan-400/30 rounded-xl p-4">
-                        <span class="block text-cyan-400 font-orbitron font-bold text-xs uppercase mb-1">🎮 Cómo aplicarlo</span>
-                        <p class="text-xs text-gray-300">En plataformas compatibles (como Xbox), configurando la región del sistema a Nueva Zelanda, el sistema te permitirá arrancar el juego 12 horas antes de que se produzca el lanzamiento oficial en España.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- SECCIÓN DE CUENTA ATRÁS ANIMADA -->
-        <div class="w-full text-center mb-12">
-            <h3 class="text-pink-400 font-orbitron text-base md:text-xl font-bold uppercase tracking-widest mb-6 neon-pink">
-                ⏱️ Tiempo restante para volar a Nueva Zelanda
-            </h3>
-            
-            <div id="countdown" class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 w-full">
-                <div class="glass-panel rounded-2xl p-6 text-center border-b-4 border-b-cyan-400 transform hover:scale-105 transition-transform duration-300 shadow-xl">
-                    <span id="days" class="text-5xl md:text-7xl font-black font-orbitron text-cyan-400 neon-cyan">00</span>
-                    <span class="block text-xs md:text-sm text-gray-400 uppercase tracking-widest mt-3 font-bold">Días</span>
-                </div>
-                <div class="glass-panel rounded-2xl p-6 text-center border-b-4 border-b-pink-500 transform hover:scale-105 transition-transform duration-300 shadow-xl">
-                    <span id="hours" class="text-5xl md:text-7xl font-black font-orbitron text-pink-500 neon-pink">00</span>
-                    <span class="block text-xs md:text-sm text-gray-400 uppercase tracking-widest mt-3 font-bold">Horas</span>
-                </div>
-                <div class="glass-panel rounded-2xl p-6 text-center border-b-4 border-b-cyan-400 transform hover:scale-105 transition-transform duration-300 shadow-xl">
-                    <span id="minutes" class="text-5xl md:text-7xl font-black font-orbitron text-cyan-400 neon-cyan">00</span>
-                    <span class="block text-xs md:text-sm text-gray-400 uppercase tracking-widest mt-3 font-bold">Minutos</span>
-                </div>
-                <div class="glass-panel rounded-2xl p-6 text-center border-b-4 border-b-pink-500 transform hover:scale-105 transition-transform duration-300 shadow-xl">
-                    <span id="seconds" class="text-5xl md:text-7xl font-black font-orbitron text-pink-500 neon-pink">00</span>
-                    <span class="block text-xs md:text-sm text-gray-400 uppercase tracking-widest mt-3 font-bold">Segundos</span>
+        <div class="trailers-grid">
+            <!-- Tráiler 1 -->
+            <div class="trailer-card">
+                <div class="trailer-header">Tráiler 1</div>
+                <div class="video-container">
+                    <iframe src="https://www.youtube-nocookie.com/embed/QdBZY2fkU-0" allowfullscreen></iframe>
                 </div>
             </div>
 
-            <!-- Mensaje final -->
-            <div id="message" class="hidden glass-panel rounded-2xl p-8 border-2 border-cyan-400 w-full animate-pulse mt-6 shadow-2xl">
-                <h2 class="text-3xl md:text-5xl font-black font-orbitron text-cyan-400 neon-cyan mb-2">¡HORA DE VIAJAR A NUEVA ZELANDA! ✈️🌴</h2>
-                <p class="text-white text-base">Enciende tu consola, cambia la región y adéntrate en Vice City.</p>
+            <!-- Tráiler 2 -->
+            <div class="trailer-card">
+                <div class="trailer-header">Tráiler 2</div>
+                <div class="video-container">
+                    <iframe src="https://www.youtube-nocookie.com/embed/V8q5mhWq3zU" allowfullscreen></iframe>
+                </div>
+            </div>
+
+            <!-- Tráiler Extended Look -->
+            <div class="trailer-card">
+                <div class="trailer-header">An Extended Look</div>
+                <div class="video-container">
+                    <iframe src="https://www.youtube-nocookie.com/embed/YOUR_EXTENDED_LOOK_ID" allowfullscreen></iframe>
+                </div>
+            </div>
+
+            <!-- Tráiler de Lanzamiento -->
+            <div class="trailer-card">
+                <div class="trailer-header">Tráiler de Lanzamiento</div>
+                <div class="video-container">
+                    <iframe src="https://www.youtube-nocookie.com/embed/YOUR_LAUNCH_TRAILER_ID" allowfullscreen></iframe>
+                </div>
             </div>
         </div>
+    </div>
 
-        <!-- SECCIÓN DE TRÁILERS Y LOOK EXTENDED (4 VÍDEOS OFICIALES DE ROCKSTAR GAMES) -->
-        <section class="w-full glass-panel rounded-2xl p-6 md:p-8 mb-8">
-            <h3 class="text-cyan-400 font-orbitron text-center text-xl md:text-2xl font-bold mb-6 neon-cyan">
-                🎬 TRÁILERS Y MATERIAL OFICIAL
-            </h3>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                
-                <!-- 1. Tráiler Oficial 1 -->
-                <div class="flex flex-col bg-black/40 border border-pink-500/30 rounded-xl overflow-hidden shadow-xl">
-                    <div class="p-3 bg-black/60 border-b border-pink-500/20 flex items-center justify-between">
-                        <span class="text-pink-400 font-orbitron text-xs font-bold uppercase">Tráiler Oficial 1</span>
-                        <span class="w-2 h-2 rounded-full bg-pink-500 animate-pulse"></span>
-                    </div>
-                    <div class="relative w-full cursor-pointer group" style="padding-top: 56.25%;" onclick="loadVideo(this, 'sx5v7TNyNLU')">
-                        <img src="https://img.youtube.com/vi/sx5v7TNyNLU/hqdefault.jpg" alt="GTA VI Trailer 1" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center group-hover:bg-black/20 transition-colors">
-                            <div class="w-12 h-12 rounded-full bg-pink-600/90 text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                                <svg class="w-6 h-6 fill-current translate-x-0.5" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 2. Tráiler Oficial 2 -->
-                <div class="flex flex-col bg-black/40 border border-cyan-400/30 rounded-xl overflow-hidden shadow-xl">
-                    <div class="p-3 bg-black/60 border-b border-cyan-400/20 flex items-center justify-between">
-                        <span class="text-cyan-400 font-orbitron text-xs font-bold uppercase">Tráiler Oficial 2</span>
-                        <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
-                    </div>
-                    <div class="relative w-full cursor-pointer group" style="padding-top: 56.25%;" onclick="loadVideo(this, 't7-NNxwYZbI')">
-                        <img src="https://img.youtube.com/vi/t7-NNxwYZbI/hqdefault.jpg" alt="GTA VI Trailer 2" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center group-hover:bg-black/20 transition-colors">
-                            <div class="w-12 h-12 rounded-full bg-cyan-500/90 text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                                <svg class="w-6 h-6 fill-current translate-x-0.5" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 3. Tráiler Oficial 3 / Launch Trailer -->
-                <div class="flex flex-col bg-black/40 border border-pink-500/30 rounded-xl overflow-hidden shadow-xl">
-                    <div class="p-3 bg-black/60 border-b border-pink-500/20 flex items-center justify-between">
-                        <span class="text-pink-400 font-orbitron text-xs font-bold uppercase">Tráiler Oficial 3</span>
-                        <span class="w-2 h-2 rounded-full bg-pink-500 animate-pulse"></span>
-                    </div>
-                    <div class="relative w-full cursor-pointer group" style="padding-top: 56.25%;" onclick="loadVideo(this, 'rz1B4B2yBZY')">
-                        <img src="https://img.youtube.com/vi/rz1B4B2yBZY/hqdefault.jpg" alt="GTA VI Trailer 3" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center group-hover:bg-black/20 transition-colors">
-                            <div class="w-12 h-12 rounded-full bg-pink-600/90 text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                                <svg class="w-6 h-6 fill-current translate-x-0.5" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 4. Look Extended -->
-                <div class="flex flex-col bg-black/40 border border-cyan-400/30 rounded-xl overflow-hidden shadow-xl">
-                    <div class="p-3 bg-black/60 border-b border-cyan-400/20 flex items-center justify-between">
-                        <span class="text-cyan-400 font-orbitron text-xs font-bold uppercase">Look Extended</span>
-                        <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
-                    </div>
-                    <div class="relative w-full cursor-pointer group" style="padding-top: 56.25%;" onclick="loadVideo(this, 'N0WA7sFe3W4')">
-                        <img src="https://img.youtube.com/vi/N0WA7sFe3W4/hqdefault.jpg" alt="GTA VI Look Extended" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center group-hover:bg-black/20 transition-colors">
-                            <div class="w-12 h-12 rounded-full bg-cyan-500/90 text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                                <svg class="w-6 h-6 fill-current translate-x-0.5" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-    </main>
-
-    <!-- PIE DE PÁGINA (LETRAS ABAJO DEL TODO) -->
-    <footer class="w-full text-center py-8 px-4 border-t border-pink-900/40 bg-black/95 relative z-10 shadow-2xl">
-        <div class="max-w-4xl mx-auto space-y-2">
-            <p class="font-orbitron tracking-wider text-pink-500 font-bold text-sm">GRAND THEFT AUTO VI • NUEVA ZELANDA EDITION</p>
-            <p class="text-xs text-gray-400">Página web diseñada exclusivamente para el seguimiento del lanzamiento y el truco de cambio de región horaria.</p>
-            <p class="text-[10px] text-gray-500 pt-2">Grand Theft Auto y sus logotipos son marcas registradas de Take-Two Interactive Software, Inc. Este sitio web es un proyecto independiente sin fines de lucro.</p>
-        </div>
+    <footer>
+        <p>&copy; 2026 Rockstar Games / Fan Countdown Page. Todos los derechos reservados.</p>
     </footer>
 
-    <!-- SCRIPTS -->
     <script>
-        function loadVideo(container, videoId) {
-            container.innerHTML = `
-                <iframe class="absolute top-0 left-0 w-full h-full border-0 rounded-b-xl" 
-                    src="https://www.youtube.com/embed/${videoId}?autoplay=1" 
-                    title="GTA VI Media" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowfullscreen>
-                </iframe>
-            `;
-        }
+        // Fecha objetivo exacta del lanzamiento en Nueva Zelanda 
+        // (18 de noviembre de 2026 a las 12:00 PM UTC / 13:00 hora peninsular de España)
+        const targetDate = new Date("November 18, 2026 12:00:00 UTC").getTime();
 
-        // Cuenta atrás exacta: 18 de noviembre de 2026 a las 12:00:00 hora peninsular española
-        const targetDate = new Date("November 18, 2026 12:00:00 GMT+01:00").getTime();
-
-        const updateCountdown = setInterval(() => {
+        function updateCountdown() {
             const now = new Date().getTime();
-            const difference = targetDate - now;
+            const distance = targetDate - now;
 
-            if (difference <= 0) {
-                clearInterval(updateCountdown);
-                document.getElementById("countdown").style.display = "none";
-                document.getElementById("message").classList.remove("hidden");
+            if (distance < 0) {
+                document.getElementById("status-textinnerHTML").innerHTML = "🔥 ¡EL JUEGO YA ESTÁ DISPONIBLE EN NUEVA ZELANDA / ESPAÑA! ¡A JUGAR! 🔥";
+                document.getElementById("days").innerText = "00";
+                document.getElementById("hours").innerText = "00";
+                document.getElementById("minutes").innerText = "00";
+                document.getElementById("seconds").innerText = "00";
                 return;
             }
 
-            const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
             document.getElementById("days").innerText = String(days).padStart(2, '0');
             document.getElementById("hours").innerText = String(hours).padStart(2, '0');
             document.getElementById("minutes").innerText = String(minutes).padStart(2, '0');
             document.getElementById("seconds").innerText = String(seconds).padStart(2, '0');
-        }, 1000);
+        }
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
     </script>
 </body>
 </html>
